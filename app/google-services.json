@@ -1,0 +1,44 @@
+{
+  "project_info": {
+    "project_number": "182413414599",
+    "firebase_url": "https://receptapp-c3a08.firebaseio.com",
+    "project_id": "receptapp-c3a08",
+    "storage_bucket": "receptapp-c3a08.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182413414599:android:0ccbcb0d0bccf1d9",
+        "android_client_info": {
+          "package_name": "com.example.receptapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182413414599-udu5bbup84s08h6nf9cplt4e79rn52do.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.receptapp",
+            "certificate_hash": "27df56c68347e7d6a406d7346598986bb1f8a5ad"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBMD0vCYLPlPlL-8ucvGEOJW39B7fvS5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182413414599-gn4vd2hsn8f6ftheib1b3gq0he8bpe2u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
