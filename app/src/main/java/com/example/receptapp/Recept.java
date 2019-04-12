@@ -13,10 +13,19 @@ public class Recept {
     ArrayList<String>tags;
     boolean favorite;
     int image;
+    String recepeID;
 
     public Recept(){};
 
-    public Recept(String title, String description, ArrayList ingredients, String instructions, ArrayList tags, boolean favorite) {
+    public String getRecepeID() {
+        return recepeID;
+    }
+
+    public void setRecepeID(String recepeID) {
+        this.recepeID = recepeID;
+    }
+
+    public Recept(String title, String description, ArrayList ingredients, String instructions, ArrayList tags, boolean favorite, String recepeID) {
         this.title = title;
         this.description = description;
         this.image = R.drawable.ic_restaurant_color_24dp;
@@ -25,6 +34,7 @@ public class Recept {
         this.instructions = instructions;
         this.tags = tags;
         this.favorite = favorite;
+        this.recepeID = recepeID;
     }
 
     public ArrayList<String> getTags() {

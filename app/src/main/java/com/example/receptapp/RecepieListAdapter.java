@@ -29,6 +29,7 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
         public ImageView imageView;
         public ImageView favoriteButton;
         public CardView main;
+        public String recepieID;
 
 
         public RecepieViewHolder(@NonNull View itemView) {
@@ -53,13 +54,11 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
             int position = getAdapterPosition();
 
             Recept recepieItem = recepieList.get(position);
+            recepieID = recepieItem.getRecepeID();
 
             if(v.getId() == R.id.recepieSquareMain){
                 Intent intent = new Intent(v.getContext(), RecepieActivity.class);
-                intent.putExtra("title", recepieItem.getTitle());
-                intent.putExtra("image", recepieItem.getImage());
-                intent.putExtra("description", recepieItem.getDescription());
-                intent.putExtra("isFav", recepieItem.isFavorite());
+                intent.putExtra("recepeID", recepieID);
                 v.getContext().startActivity(intent);
 
 

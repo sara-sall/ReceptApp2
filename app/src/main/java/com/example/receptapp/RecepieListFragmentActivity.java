@@ -70,9 +70,9 @@ public class RecepieListFragmentActivity extends Fragment {
         ingredients.add("1 tsk Salt");
 
         tags.add("vegetarisk");
-        Recept r = new Recept("Pannkakor", "Ägg, Gluten, Laktos", ingredients, "Test", tags, true);
+        Recept r = new Recept("Pannkakor", "Ägg, Gluten, Laktos", ingredients, "Test", tags, true, "");
 
-        //receptRef.add(r);
+        receptRef.add(r);
 
         Log.d("test", "get");
 
@@ -99,6 +99,7 @@ public class RecepieListFragmentActivity extends Fragment {
                 for (DocumentSnapshot d : q.getDocuments()) {
                     Recept recept = d.toObject(Recept.class);
                     receptLista.add(recept);
+                    recept.setRecepeID(d.getId());
                 }
                 Log.d("test", "receptlista " + receptLista.size());
                 adapter.notifyDataSetChanged();
