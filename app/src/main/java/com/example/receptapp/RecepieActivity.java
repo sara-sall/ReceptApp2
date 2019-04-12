@@ -15,79 +15,61 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class RecepieActivity extends AppCompatActivity {
 
-    private String title;
-    private String desc;
-    private int image;
-    private TextView titleText;
     private TextView descText;
     boolean isFavorite;
     Toolbar toolbar;
     ImageView rImage;
     private String recepeID;
+    private Recept recept;
+
+    private FloatingActionButton fab;
+
     private FirebaseFirestore db;
     private DocumentReference receptRef;
+    private CollectionReference favoriteRef;
+
+    private FirebaseAuth mAuth;
+    public String user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recepie);
 
-        //FirebaseApp.initializeApp(container.getContext());
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+        favoriteRef = FirebaseFirestore.getInstance().collection("users").document(user).collection("favorites");
 
-     //   titleText = (TextView) findViewById(R.id.recepieATitleID);
         descText = (TextView) findViewById(R.id.recepieADescID);
         toolbar = (Toolbar) findViewById(R.id.rToolbar);
         rImage = (ImageView) findViewById(R.id.rImage);
         toolbar.setTitle("");
 
-
         Bundle b = new Bundle();
         b = getIntent().getExtras();
 
         if(b != null){
-
-            title = (String) b.get("title");
-            desc = (String) b.get("description");
-            isFavorite = (boolean) b.get("isFav");
-            image = (int) b.get("image");
             recepeID = (String) b.get("recepeID");
-
             receptRef = db.collection("recept").document(recepeID);
-
         }
 
-        receptRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot document = task.getResult();
-                    if(document.exists()){
-                        Recept recept = document.toObject(Recept.class);
-                        descText.setText(recept.getDescription());
-                        rImage.setImageResource(recept.getImage());
-                        toolbar.setTitle(recept.getTitle());
-                    }
-                    else{
-                        Log.d("!!!", "No document found");
-                    }
-                }
-                else{
-                    Log.d("!!!", "get failed with ", task.getException());
-                }
-            }
-        });
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -100,33 +82,75 @@ public class RecepieActivity extends AppCompatActivity {
             }
         });
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if(isFavorite){
-            fab.setImageResource(R.drawable.ic_favorite_white_24dp);
-        }
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isFavorite){
+                if(!recept.isFavorite()){
+                    HashMap<String, String> data = new HashMap<>();
+                    data.put("recepeID", recepeID);
+                    favoriteRef.document(recepeID).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            fab.setImageResource(R.drawable.ic_favorite_white_24dp);
+                            Toast.makeText(getApplicationContext(), "Recept sparat i favoriter", Toast.LENGTH_LONG).show();
+                            recept.setFavorite(true);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("!!!", "Error adding document", e);
+                        }
+                    });
 
-                    Snackbar.make(view, "Recept sparat i favoriter", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    fab.setImageResource(R.drawable.ic_favorite_white_24dp);
 
-                    isFavorite=true;
                 }else{
-
-                    Snackbar.make(view, "Recept borttaget ur favoriter", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    fab.setImageResource(R.drawable.ic_favorite_border_white_24dp);
-                    isFavorite = false;
+                    favoriteRef.document(recepeID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            fab.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+                            Toast.makeText(getApplicationContext(), "Recept borttaget ur favoriter", Toast.LENGTH_LONG).show();
+                            recept.setFavorite(false);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("!!!", "Error deleting document", e);
+                        }
+                    });
                 }
                 fab.hide();
                 fab.show();
 
             }
         });
+
+        receptRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()){
+                        recept = document.toObject(Recept.class);
+                        descText.setText(recept.getDescription());
+                        rImage.setImageResource(recept.getImage());
+                        toolbar.setTitle(recept.getTitle());
+                        if(recept.isFavorite()){
+                            fab.setImageResource(R.drawable.ic_favorite_white_24dp);
+                        }
+                    }
+                    else{
+                        Log.d("!!!", "No document found");
+                    }
+                }
+                else{
+                    Log.d("!!!", "get failed with ", task.getException());
+                }
+            }
+        });
+
+
     }
 
 }

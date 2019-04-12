@@ -17,6 +17,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
 public class RecepieListAdapter extends RecyclerView.Adapter {
@@ -31,12 +34,22 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
         public CardView main;
         public String recepieID;
 
+        private FirebaseAuth mAuth;
+        public String user;
+
+        private FirebaseFirestore db;
+
+
 
         public RecepieViewHolder(@NonNull View itemView) {
 
             super(itemView);
 
             itemView.setOnClickListener(this);
+            mAuth = FirebaseAuth.getInstance();
+            user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            db = FirebaseFirestore.getInstance();
 
             textView = itemView.findViewById(R.id.recepieSquareTitle);
             textView2 = itemView.findViewById(R.id.recepieSquareDesc);
@@ -61,11 +74,9 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
                 intent.putExtra("recepeID", recepieID);
                 v.getContext().startActivity(intent);
 
-
             }
+
             if(v.getId() == R.id.favoriteButtonID){
-
-
 
                 Log.d("Test", recepieItem.getTitle());
                 if(!recepieItem.isFavorite()){

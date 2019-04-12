@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -45,6 +46,7 @@ public class RecepieListFragmentActivity extends Fragment {
     private FirebaseFirestore db;
     private CollectionReference receptRef;
 
+
     private ArrayList<String> ingredients;
     private ArrayList<String> tags;
 
@@ -58,6 +60,8 @@ public class RecepieListFragmentActivity extends Fragment {
         db = FirebaseFirestore.getInstance();
         receptRef = db.collection("recept");
 
+
+
         receptLista = new ArrayList<Recept>();
 
         ingredients = new ArrayList<String>();
@@ -70,9 +74,9 @@ public class RecepieListFragmentActivity extends Fragment {
         ingredients.add("1 tsk Salt");
 
         tags.add("vegetarisk");
-        Recept r = new Recept("Pannkakor", "Ägg, Gluten, Laktos", ingredients, "Test", tags, true, "");
+        Recept r = new Recept("Pannkakor", "Ägg, Gluten, Laktos", ingredients, "Test", tags, false, "");
 
-        receptRef.add(r);
+       // receptRef.add(r);
 
         Log.d("test", "get");
 
