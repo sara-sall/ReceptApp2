@@ -6,17 +6,85 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".RecepieActivity"
-    tools:showIn="@layout/activity_recepie">
+    tools:showIn="@layout/activity_recepie"
+    android:padding="25dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/contentAllergy"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimaryDark"
+           />
 
         <TextView
             android:id="@+id/recepieADescID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="Description"
+            android:paddingStart="15sp"
+            android:textSize="20sp"
+            android:paddingBottom="15dp"
+            android:textColor="@color/black"/>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dark_gray" />
+
+        <TextView
+            android:id="@+id/Ingredienser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ingredients"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingTop="5dp"
+            />
+
+        <TextView
+            android:id="@+id/ingredientsID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ingredients"
+            android:textColor="@color/black"
+            android:paddingStart="15dp"
+            android:textSize="20sp"
+            android:paddingBottom="15dp"
+            />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dark_gray"
+            />
+
+        <TextView
+            android:id="@+id/Instruktioner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instrictions"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:paddingTop="5dp"
+            />
+
+        <TextView
+            android:id="@+id/instructionsID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Instructions"
+            android:textColor="@color/black"
+            android:paddingStart="15dp"
+            android:textSize="20sp"/>
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

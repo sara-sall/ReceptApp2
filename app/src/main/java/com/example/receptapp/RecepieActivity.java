@@ -10,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,12 +27,15 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class RecepieActivity extends AppCompatActivity {
 
     private TextView descText;
+    private TextView instText;
+    private TextView ingrList;
     boolean isFavorite;
     Toolbar toolbar;
     ImageView rImage;
@@ -60,6 +65,8 @@ public class RecepieActivity extends AppCompatActivity {
         descText = (TextView) findViewById(R.id.recepieADescID);
         toolbar = (Toolbar) findViewById(R.id.rToolbar);
         rImage = (ImageView) findViewById(R.id.rImage);
+        ingrList = (TextView) findViewById(R.id.ingredientsID);
+        instText = (TextView) findViewById(R.id.instructionsID);
         toolbar.setTitle("");
 
         Bundle b = new Bundle();
@@ -136,6 +143,14 @@ public class RecepieActivity extends AppCompatActivity {
                         descText.setText(recept.getDescription());
                         rImage.setImageResource(recept.getImage());
                         toolbar.setTitle(recept.getTitle());
+                        instText.setText(recept.getInstructions());
+
+                        String ingredients = "";
+                        for(String i : recept.getIngredients()){
+                            ingredients = ingredients + "● " + String.valueOf(i) + "\n";
+                        }
+                        ingrList.setText(ingredients);
+
                         if(recept.isFavorite()){
                             fab.setImageResource(R.drawable.ic_favorite_white_24dp);
                         }

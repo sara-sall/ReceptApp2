@@ -67,16 +67,26 @@ public class RecepieListFragmentActivity extends Fragment {
         ingredients = new ArrayList<String>();
         tags = new ArrayList<String>();
 
+        String title = "Pannkakor";
+
+        String desc = "Ägg, Gluten, Laktos";
+
+        tags.add("vegetarisk");
+
         ingredients.add("6 dl Mjölk");
         ingredients.add("3 st Ägg");
         ingredients.add("3 dl Mjöl");
         ingredients.add("2 tsk Vaniljsocker");
         ingredients.add("1 tsk Salt");
 
-        tags.add("vegetarisk");
-        Recept r = new Recept("Pannkakor", "Ägg, Gluten, Laktos", ingredients, "Test", tags, false, "");
+        String inst = "Blanda mjöl, salt och vaniljsocker tillsammans med hälften av mjölken till en jämn smet.\n\n"+
+                "Tillsätt sedan resten av mjölken och äggen\n\n" +
+                "Stek pannkakorna i stekpanna och servera sedan med sylt och glass!";
 
-       // receptRef.add(r);
+
+        Recept r = new Recept(title, desc, ingredients, inst, tags, false, "");
+
+        receptRef.add(r);
 
         Log.d("test", "get");
 
