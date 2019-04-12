@@ -101,7 +101,7 @@ public class RecepieActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             fab.setImageResource(R.drawable.ic_favorite_white_24dp);
-                            Toast.makeText(getApplicationContext(), "Recept sparat i favoriter", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.addFavorite, Toast.LENGTH_LONG).show();
                             recept.setFavorite(true);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -117,7 +117,7 @@ public class RecepieActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             fab.setImageResource(R.drawable.ic_favorite_border_white_24dp);
-                            Toast.makeText(getApplicationContext(), "Recept borttaget ur favoriter", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.removeFavorite, Toast.LENGTH_LONG).show();
                             recept.setFavorite(false);
                         }
                     }).addOnFailureListener(new OnFailureListener() {

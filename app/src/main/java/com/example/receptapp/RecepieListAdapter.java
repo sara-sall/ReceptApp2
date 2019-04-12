@@ -81,11 +81,11 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
                 Log.d("Test", recepieItem.getTitle());
                 if(!recepieItem.isFavorite()){
                     favoriteButton.setImageResource(R.drawable.ic_favorite_color_24dp);
-                    Toast.makeText(v.getContext() , "Recept tillagt i favoriter", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext() , R.string.addFavorite, Toast.LENGTH_SHORT).show();
                     recepieItem.setFavorite(true);
                 }else{
                     favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                    Toast.makeText(v.getContext() , "Recept borttaget ur favoriter", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext() , R.string.removeFavorite, Toast.LENGTH_SHORT).show();
                     recepieItem.setFavorite(false);
                 }
             }

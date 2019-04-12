@@ -86,7 +86,7 @@ public class RecepieListFragmentActivity extends Fragment {
 
         Recept r = new Recept(title, desc, ingredients, inst, tags, false, "");
 
-        receptRef.add(r);
+        //receptRef.add(r);
 
         Log.d("test", "get");
 

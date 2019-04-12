@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
-    EditText emailInput, passwordInput;
+    EditText emailInput, passwordInput, passwordInput2;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
 
@@ -30,6 +30,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         emailInput = (EditText) findViewById(R.id.emailSU);
         passwordInput = (EditText) findViewById(R.id.passwordSU);
+        passwordInput2 = (EditText) findViewById(R.id.passwordSU2);
         progressBar = (ProgressBar) findViewById(R.id.progressbarSU);
 
         mAuth = FirebaseAuth.getInstance();
@@ -47,6 +48,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void registerUser(){
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
+        String password2 = passwordInput2.getText().toString().trim();
 
         if(email.isEmpty()){
             emailInput.setError("E-mailadress behöver fyllas i");
@@ -71,6 +73,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             passwordInput.requestFocus();
             return;
         }
+        if(!password.equals(password2)){
+            passwordInput2.setError("Lösenorden måste vara lika");
+            passwordInput2.requestFocus();
+            return;
+
+        }
+
+
+
         progressBar.setVisibility(View.VISIBLE);
 
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {

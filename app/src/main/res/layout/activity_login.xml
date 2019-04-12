@@ -42,7 +42,8 @@
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textColor="@color/colorOnPrimary"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -62,7 +63,8 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textColor="@color/colorOnPrimary"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -75,13 +77,16 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/toSignUp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/toSignUp" />
+
 
         </LinearLayout>
+    <TextView
+        android:id="@+id/toSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/toSignUp"
+        android:padding="10dp" />
     <ProgressBar
         android:id="@+id/progressbarLI"
         android:layout_width="wrap_content"
