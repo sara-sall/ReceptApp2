@@ -30,27 +30,30 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorOnPrimary">
+                android:textColor="@color/colorOnPrimary"
+                android:textColorHint="@color/colorAccent"
+                >
 
                 <AutoCompleteTextView
 
-                    android:id="@+id/email"
+                    android:id="@+id/emailLI"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColor="@color/colorOnPrimary" />
+                    android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorOnPrimary"
+                android:textColorHint="@color/colorAccent">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/passwordLI"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
@@ -59,8 +62,7 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColor="@color/colorOnPrimary" />
+                    android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -73,5 +75,17 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/toSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/toSignUp" />
+
         </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressbarLI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 </LinearLayout>

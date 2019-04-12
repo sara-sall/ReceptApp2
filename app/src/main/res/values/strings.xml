@@ -117,4 +117,7 @@
         completions."
     </string>
     <string name="title_activity_recepie">RecepieActivity</string>
+    <string name="sign_up_buttonID">Skapa konto</string>
+    <string name="toLogin">Har du redan ett konto? Logga in!</string>
+    <string name="toSignUp">Har du inte ett konto? Skapa nytt konto!</string>
 </resources>

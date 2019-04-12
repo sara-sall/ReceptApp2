@@ -29,7 +29,15 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,23 +45,93 @@ import java.util.List;
 import static android.Manifest.permission.READ_CONTACTS;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Button loginButton;
+    private FirebaseAuth mAuth;
+    private TextView signUp;
+    private EditText emailInput, passwordInput;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        signUp = (TextView) findViewById(R.id.toSignUp);
+        emailInput = (EditText) findViewById(R.id.emailLI);
+        passwordInput = (EditText) findViewById(R.id.passwordLI);
+        progressBar = (ProgressBar) findViewById(R.id.progressbarLI);
         loginButton = (Button) findViewById(R.id.signInButtonID);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        mAuth = FirebaseAuth.getInstance();
+
+        signUp.setOnClickListener(this);
+        loginButton.setOnClickListener(this);
+
+
+    }
+
+    private void userLogin(){
+
+        String email = emailInput.getText().toString().trim();
+        String password = passwordInput.getText().toString().trim();
+
+        if(email.isEmpty()){
+            emailInput.setError("E-mailadress behöver fyllas i");
+            emailInput.requestFocus();
+            return;
+        }
+
+/*        if(Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            emailInput.setError(("Skriv in en giltig e-mailadress"));
+            emailInput.requestFocus();
+            return;
+        }*/
+
+        if(password.isEmpty()){
+            passwordInput.setError("Lösenord behöver fyllas i");
+            passwordInput.requestFocus();
+            return;
+        }
+
+        if(password.length()<6){
+            passwordInput.setError("Lösenord behöver vara minst 6 tecken");
+            passwordInput.requestFocus();
+            return;
+        }
+        progressBar.setVisibility(View.VISIBLE);
+
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent (LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                progressBar.setVisibility(View.GONE);
+                if(task.isSuccessful()){
+                    Intent intent = new Intent (LoginActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.signInButtonID:
+                userLogin();
+                break;
+            case R.id.toSignUp:
+                startActivity(new Intent (this, SignUpActivity.class));
+                break;
+
+
+
+        }
     }
 }
 
