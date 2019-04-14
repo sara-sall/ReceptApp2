@@ -81,14 +81,8 @@ public class RecepieActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RecepieActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -185,6 +179,12 @@ public class RecepieActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 }
