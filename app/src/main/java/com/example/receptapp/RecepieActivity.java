@@ -111,6 +111,7 @@ public class RecepieActivity extends AppCompatActivity {
                             Log.d("!!!", "Error adding document", e);
                         }
                     });
+                    isFavorite = true;
 
 
                 }else{
@@ -127,6 +128,7 @@ public class RecepieActivity extends AppCompatActivity {
                             Log.d("!!!", "Error deleting document", e);
                         }
                     });
+                    isFavorite = false;
                 }
 
                 fab.show();

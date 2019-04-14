@@ -41,7 +41,7 @@ public class FavoriteListFragmentActivity extends Fragment {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private RecepieListAdapter adapter;
+    private RecepieListAdapter adapterF;
     private DividerItemDecoration itemDecoration;
     private ImageView favoriteButton;
     private ArrayList<Recept> receptLista;
@@ -83,8 +83,8 @@ public class FavoriteListFragmentActivity extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new RecepieListAdapter(receptLista);
-        recyclerView.setAdapter(adapter);
+        adapterF = new RecepieListAdapter(receptLista);
+        recyclerView.setAdapter(adapterF);
 
         favoriteRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -106,7 +106,7 @@ public class FavoriteListFragmentActivity extends Fragment {
                                     recept.setRecepeID(d.getId());
                                 }
                             }
-                            adapter.notifyDataSetChanged();
+                            adapterF.notifyDataSetChanged();
                         }
                     });
 

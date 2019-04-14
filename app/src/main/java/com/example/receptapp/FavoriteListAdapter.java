@@ -149,13 +149,7 @@ public class FavoriteListAdapter extends RecyclerView.Adapter {
         vh.textView.setText(recepieList.get(i).getTitle());
         vh.textView2.setText(recepieList.get(i).getDescription());
         vh.imageView.setImageResource(recepieList.get(i).getImage());
-
-
-        if (recepieList.get(i).isFavorite()) {
-            vh.favoriteButton.setImageResource(R.drawable.ic_favorite_color_24dp);
-        }else if(!recepieList.get(i).isFavorite()){
-            vh.favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-        }
+        vh.favoriteButton.setImageResource(R.drawable.ic_favorite_color_24dp);
     }
 
     @Override
