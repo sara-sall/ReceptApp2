@@ -32,7 +32,7 @@
     <string name="toLogin">Har du redan ett konto? Logga in!</string>
     <string name="toSignUp">Har du inte ett konto? Skapa nytt konto!</string>
     <string name="ingredients">Ingredienser:</string>
-    <string name="instrictions">Gör då här:</string>
+    <string name="instructions">Gör så här:</string>
     <string name="contentAllergy">Innehåller:</string>
     <string name="prompt_password_repeat">Repetera lösenord</string>
 </resources>

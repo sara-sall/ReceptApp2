@@ -26,6 +26,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,12 +95,13 @@ public class RecepieActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!recept.isFavorite()){
+                if(!isFavorite){
                     HashMap<String, String> data = new HashMap<>();
                     data.put("recepeID", recepeID);
                     favoriteRef.document(recepeID).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            fab.hide();
                             fab.setImageResource(R.drawable.ic_favorite_white_24dp);
                             Toast.makeText(getApplicationContext(), R.string.addFavorite, Toast.LENGTH_LONG).show();
                             recept.setFavorite(true);
@@ -116,6 +118,7 @@ public class RecepieActivity extends AppCompatActivity {
                     favoriteRef.document(recepeID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            fab.hide();
                             fab.setImageResource(R.drawable.ic_favorite_border_white_24dp);
                             Toast.makeText(getApplicationContext(), R.string.removeFavorite, Toast.LENGTH_LONG).show();
                             recept.setFavorite(false);
@@ -127,7 +130,7 @@ public class RecepieActivity extends AppCompatActivity {
                         }
                     });
                 }
-                fab.hide();
+
                 fab.show();
 
             }
@@ -161,6 +164,22 @@ public class RecepieActivity extends AppCompatActivity {
                 }
                 else{
                     Log.d("!!!", "get failed with ", task.getException());
+                }
+            }
+        });
+
+        favoriteRef.document(recepeID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    fab.setImageResource(R.drawable.ic_favorite_white_24dp);
+                    isFavorite = true;
+                    Log.d("!!!", "Favorit");
+                }
+                else{
+                    fab.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+                    isFavorite = false;
+                    Log.d("!!!", "Inte Favorit");
                 }
             }
         });

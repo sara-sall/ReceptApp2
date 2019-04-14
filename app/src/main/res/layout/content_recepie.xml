@@ -71,11 +71,10 @@
             android:id="@+id/Instruktioner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/instrictions"
-            android:textSize="20sp"
-            android:textColor="@color/colorPrimaryDark"
             android:paddingTop="5dp"
-            />
+            android:text="@string/instructions"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/instructionsID"
