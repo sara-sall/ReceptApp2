@@ -1,7 +1,9 @@
 package com.example.receptapp;
 
+import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -9,10 +11,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 import java.util.List;
 
 public class FavoriteListAdapter extends RecyclerView.Adapter {
@@ -25,6 +36,14 @@ public class FavoriteListAdapter extends RecyclerView.Adapter {
         public ImageView imageView;
         public ImageView favoriteButton;
         public CardView main;
+        public String recepieID;
+
+        private FirebaseAuth mAuth;
+        public String user;
+
+        private FirebaseFirestore db;
+        private CollectionReference favoriteRef;
+
 
 
         public RecepieViewHolder(@NonNull View itemView) {
@@ -32,6 +51,11 @@ public class FavoriteListAdapter extends RecyclerView.Adapter {
             super(itemView);
 
             itemView.setOnClickListener(this);
+            mAuth = FirebaseAuth.getInstance();
+            user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            db = FirebaseFirestore.getInstance();
+            favoriteRef = FirebaseFirestore.getInstance().collection("users").document(user).collection("favorites");
 
             textView = itemView.findViewById(R.id.recepieSquareTitle);
             textView2 = itemView.findViewById(R.id.recepieSquareDesc);
@@ -42,7 +66,6 @@ public class FavoriteListAdapter extends RecyclerView.Adapter {
             favoriteButton.setOnClickListener(this);
 
 
-
         }
 
         @Override
@@ -50,41 +73,56 @@ public class FavoriteListAdapter extends RecyclerView.Adapter {
             int position = getAdapterPosition();
 
             Recept recepieItem = recepieList.get(position);
+            recepieID = recepieItem.getRecepeID();
 
-            if(v.getId() == R.id.recepieSquareMain){
+            switch (v.getId()){
+                case R.id.recepieSquareMain:
+                    Intent intent = new Intent(v.getContext(), RecepieActivity.class);
+                    intent.putExtra("recepeID", recepieID);
+                    v.getContext().startActivity(intent);
+                    break;
+
+                case R.id.favoriteButtonID:
+                    final View view;
+                    view = (ImageView) v.findViewById(R.id.favoriteButtonID);
+                    favoriteRef.document(recepieID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(view.getContext(), R.string.removeFavorite, Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("!!!", "Error deleting document", e);
+                        }
+                    });
+                    break;
+            }
+
+/*            if(v.getId() == R.id.recepieSquareMain){
                 Intent intent = new Intent(v.getContext(), RecepieActivity.class);
-                intent.putExtra("title", recepieItem.getTitle());
-              //  intent.putExtra("image", recepieItem.getImage());
-                intent.putExtra("description", recepieItem.getDescription());
-              //  intent.putExtra("isFav", recepieItem.isFavorite());
+                intent.putExtra("recepeID", recepieID);
                 v.getContext().startActivity(intent);
 
-
             }
-/*            if(v.getId() == R.id.favoriteButtonID){
 
-
-
-                Log.d("Test", recepieItem.getTitle());
-                if(!recepieItem.isFavorite()){
-                    favoriteButton.setImageResource(R.drawable.ic_favorite_color_24dp);
-                    Toast.makeText(v.getContext() , "Recept tillagt i favoriter", Toast.LENGTH_SHORT).show();
-                    recepieItem.setFavorite(true);
-                }else{
-                    favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                    Toast.makeText(v.getContext() , "Recept borttaget ur favoriter", Toast.LENGTH_SHORT).show();
-                    recepieItem.setFavorite(false);
-                }
+            if(v.getId() == R.id.favoriteButtonID){
+                final View view;
+                view = (ImageView) v.findViewById(R.id.favoriteButtonID);
+                favoriteRef.document(recepieID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(view.getContext(), R.string.removeFavorite, Toast.LENGTH_LONG).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("!!!", "Error deleting document", e);
+                    }
+                });
             }*/
-           //
-
-
-
-
 
         }
-
-
 
     }
 
@@ -98,23 +136,26 @@ public class FavoriteListAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = (View) LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.favorite_square, viewGroup, false);
+        View view = (View) LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recepie_square, viewGroup, false);
 
         RecepieViewHolder recepieViewHolder = new RecepieViewHolder(view);
         context = viewGroup.getContext();
         return recepieViewHolder;
-
-
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         RecepieViewHolder vh = (RecepieViewHolder) viewHolder;
-        vh.textView.setText("Du har inga favoriter sparade!");
         vh.textView.setText(recepieList.get(i).getTitle());
         vh.textView2.setText(recepieList.get(i).getDescription());
-      //  vh.imageView.setImageResource(recepieList.get(i).getImage());
-       // vh.favoriteButton.setImageResource(recepieList.get(i).getFavoriteImage());
+        vh.imageView.setImageResource(recepieList.get(i).getImage());
+
+
+        if (recepieList.get(i).isFavorite()) {
+            vh.favoriteButton.setImageResource(R.drawable.ic_favorite_color_24dp);
+        }else if(!recepieList.get(i).isFavorite()){
+            vh.favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        }
     }
 
     @Override

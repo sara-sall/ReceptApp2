@@ -104,7 +104,6 @@ public class RecepieActivity extends AppCompatActivity {
                             fab.hide();
                             fab.setImageResource(R.drawable.ic_favorite_white_24dp);
                             Toast.makeText(getApplicationContext(), R.string.addFavorite, Toast.LENGTH_LONG).show();
-                            recept.setFavorite(true);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -121,7 +120,6 @@ public class RecepieActivity extends AppCompatActivity {
                             fab.hide();
                             fab.setImageResource(R.drawable.ic_favorite_border_white_24dp);
                             Toast.makeText(getApplicationContext(), R.string.removeFavorite, Toast.LENGTH_LONG).show();
-                            recept.setFavorite(false);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
