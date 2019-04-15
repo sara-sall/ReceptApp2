@@ -5,10 +5,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,11 +27,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     private TextView emailVerified;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+    private Toolbar toolbar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        toolbar = (Toolbar) v.findViewById(R.id.toolbarID);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.toolbarTitleProf);
 
         mAuth =  FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -69,5 +80,23 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 break;
 
         }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.menuSearch);
+        item.setVisible(false);
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        MenuItem item = menu.findItem(R.id.menuSearch);
+        item.setVisible(false);
+
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

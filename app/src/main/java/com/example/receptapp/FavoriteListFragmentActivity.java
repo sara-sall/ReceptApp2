@@ -7,9 +7,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +46,7 @@ public class FavoriteListFragmentActivity extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private RecepieListAdapter adapterF;
     private DividerItemDecoration itemDecoration;
+    private Toolbar toolbar;
     private ImageView favoriteButton;
     private ArrayList<Recept> receptLista;
     private ArrayList<String> favoritLista;
@@ -66,6 +69,10 @@ public class FavoriteListFragmentActivity extends Fragment {
 
         View v = inflater.inflate(R.layout.activity_recepie_list, container, false);
         FirebaseApp.initializeApp(container.getContext());
+
+        toolbar = (Toolbar) v.findViewById(R.id.toolbarID);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.toolbarTitleFav);
 
         mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser().getUid();

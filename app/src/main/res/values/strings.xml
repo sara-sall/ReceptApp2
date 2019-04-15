@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">receptApp</string>
+    <string name="app_name">Recept</string>
     <string name="recepieButton">Recept</string>
     <string name="searchMeny">Sök</string>
     <string name="favoriteMeny">Favoriter</string>

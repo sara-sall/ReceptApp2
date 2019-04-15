@@ -2,9 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="50dp"
     android:layout_gravity="center_vertical"
     >
+
+    <include
+        android:id="@+id/toolbarID"
+        layout="@layout/toolbar" />
 
     <LinearLayout
         android:id="@+id/linLay"
@@ -12,6 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="vertical"
+        android:padding="50dp"
         android:layout_marginTop="100dp">
 
         <TextView
@@ -47,7 +51,8 @@
         android:layout_marginTop="87dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingTop="50dp">
+        android:paddingTop="50dp"
+        android:padding="50dp">
 
         <Button
             android:id="@+id/passwordChangeID"

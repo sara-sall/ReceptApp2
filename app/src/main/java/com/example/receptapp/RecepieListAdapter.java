@@ -180,7 +180,7 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Picasso.with(context).load(R.drawable.ic_restaurant_color_24dp).into(vh.imageView);
-                vh.imageView.setImageResource(recepieList.get(i).getImage());
+                vh.imageView.setImageResource(R.drawable.ic_restaurant_color_24dp);
             }
         });
 

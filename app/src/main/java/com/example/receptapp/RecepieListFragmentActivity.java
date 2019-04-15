@@ -6,15 +6,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SearchView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,7 +31,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -39,6 +47,7 @@ public class RecepieListFragmentActivity extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecepieListAdapter adapter;
+    private Toolbar toolbar;
     private DividerItemDecoration itemDecoration;
     private ImageView favoriteButton;
     private ArrayList<Recept> receptLista;
@@ -59,6 +68,10 @@ public class RecepieListFragmentActivity extends Fragment {
         FirebaseApp.initializeApp(container.getContext());
         db = FirebaseFirestore.getInstance();
         receptRef = db.collection("recept");
+
+        toolbar = (Toolbar) v.findViewById(R.id.toolbarID);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.toolbarTitleRecepe);
 
 
 
@@ -124,5 +137,42 @@ public class RecepieListFragmentActivity extends Fragment {
 
         return v;
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        MenuItem item = menu.findItem(R.id.menuSearch);
+        item.setVisible(true);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                receptRef = db.collection("recept");
+                receptRef.whereArrayContains("tags", query).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        QuerySnapshot q = task.getResult();
+                        receptLista.clear();
+                        for (DocumentSnapshot d : q.getDocuments()) {
+                            Recept recept = d.toObject(Recept.class);
+                            receptLista.add(recept);
+                            recept.setRecepeID(d.getId());
+                        }
+                        Log.d("test", "receptlista " + receptLista.size());
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+                return false;
+
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

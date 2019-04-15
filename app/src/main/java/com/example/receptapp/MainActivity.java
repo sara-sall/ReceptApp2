@@ -7,7 +7,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import java.util.ArrayList;
 
@@ -19,43 +22,11 @@ public class MainActivity extends AppCompatActivity {
     Fragment profileFragment;
     Toolbar toolbar;
 
-/*    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference receptRef = db.collection("recept");
-
-    private String title;
-    private String desc;
-    private ArrayList<String> ingredients;
-    private String inst;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbarID);
-        toolbar.setTitle(R.string.toolbarTitleRecepe);
-        setSupportActionBar(toolbar);
-
-
-        final ArrayList<Recept> receptLista;
-        //        receptLista = new ArrayList<Recept>();
-        //
-        //        // public void loadRecepes(View v){
-        //        receptRef.get()
-        //                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-        //                    @Override
-        //                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-        //                        for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
-        //                            Recept recept = documentSnapshot.toObject(Recept.class);
-        //                            receptLista.add(recept);
-        //                        }
-        //                    }
-        //                });
-        //
-        //
-        //        // }
-
-
 
 
 //        View decorView = getWindow().getDecorView();
@@ -74,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().add(R.id.container_mainID, recepieListFragment).commit();
 
 
+
     }
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -83,17 +55,16 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.nav_recepies:
                     selectedFragment = recepieListFragment;
-                    toolbar.setTitle(R.string.toolbarTitleRecepe);
                     break;
 
                 case R.id.nav_favorites:
                     selectedFragment = favoritesFragment;
-                    toolbar.setTitle(R.string.toolbarTitleFav);
+                //    toolbar.setTitle(R.string.toolbarTitleFav);
                     break;
 
                 case R.id.nav_profile:
                     selectedFragment = profileFragment;
-                    toolbar.setTitle(R.string.toolbarTitleProf);
+                  //  toolbar.setTitle(R.string.toolbarTitleProf);
                     break;
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.container_mainID, selectedFragment).commit();
@@ -101,4 +72,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     };
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        MenuItem mSearch = menu.findItem(R.id.menuSearch);
+        SearchView mSV = (SearchView) mSearch.getActionView();
+        return super.onCreateOptionsMenu(menu);
+    }
 }
+
