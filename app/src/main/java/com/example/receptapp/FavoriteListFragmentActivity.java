@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -93,23 +94,44 @@ public class FavoriteListFragmentActivity extends Fragment {
                     Log.w(TAG, "Listen failed.", e);
                     return;
                 }
-                receptLista.clear();
-                for (QueryDocumentSnapshot doc : value) {
-                    receptRef.document(doc.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot d = task.getResult();
-                                if (d.exists()) {
-                                    Recept recept = d.toObject(Recept.class);
-                                    receptLista.add(recept);
-                                    recept.setRecepeID(d.getId());
-                                    Log.d("!!!", String.valueOf(receptLista.size()));
+               // receptLista.clear();
+                Log.d("!!!clear", String.valueOf(receptLista.size()));
+                for (DocumentChange doc : value.getDocumentChanges()) {
+                    switch (doc.getType()){
+                        case ADDED:
+                            receptRef.document(doc.getDocument().getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot d = task.getResult();
+                                        if (d.exists()) {
+                                            Recept recept = d.toObject(Recept.class);
+                                            receptLista.add(recept);
+                                            recept.setRecepeID(d.getId());
+                                            Log.d("!!!", String.valueOf(receptLista.size()));
+                                        }
+                                    }
+                                    adapterF.notifyDataSetChanged();
+                                }
+                            });
+                            break;
+                        case REMOVED:
+                            Recept r = null;
+                            for(Recept recept: receptLista){
+                                if(recept.getRecepeID().equals(doc.getDocument().getId())){
+                                    r = recept;
                                 }
                             }
-                            adapterF.notifyDataSetChanged();
-                        }
-                    });
+
+                            if (r != null){
+                                receptLista.remove(r);
+                                adapterF.notifyDataSetChanged();
+                            }
+
+                            break;
+                    }
+
+
 
                 }
             }

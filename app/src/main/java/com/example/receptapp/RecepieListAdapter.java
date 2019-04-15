@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -40,7 +41,8 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
 
     private static List<Recept> recepieList;
     private Context context;
-    public static class RecepieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+    public static class RecepieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textView;
         public TextView textView2;
         public ImageView imageView;
@@ -55,7 +57,6 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
 
         private FirebaseFirestore db;
         private CollectionReference favoriteRef;
-
 
 
         public RecepieViewHolder(@NonNull View itemView) {
@@ -86,45 +87,51 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
         public void onClick(View v) {
             int position = getAdapterPosition();
 
-           final Recept recepieItem = recepieList.get(position);
+            final Recept recepieItem = recepieList.get(position);
             recepieID = recepieItem.getRecepeID();
-            if(v.getId() == R.id.recepieSquareMain){
+            if (v.getId() == R.id.recepieSquareMain) {
                 Intent intent = new Intent(v.getContext(), RecepieActivity.class);
                 intent.putExtra("recepeID", recepieID);
                 v.getContext().startActivity(intent);
 
             }
 
-            if(v.getId() == R.id.favoriteButtonID){
+            if (v.getId() == R.id.favoriteButtonID) {
                 final View view;
                 view = (ImageView) v.findViewById(R.id.favoriteButtonID);
 
-                if(!recepieItem.isFavorite()){
-                    HashMap<String, String> data = new HashMap<>();
-                        data.put("recepeID", recepieID);
-                        favoriteRef.document(recepieID).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                favoriteButton.setImageResource(R.drawable.ic_favorite_color_24dp);
-                                Toast.makeText(view.getContext(), R.string.addFavorite, Toast.LENGTH_LONG).show();
-                                recepieItem.setFavorite(true);
-                            }
-                        });
+                CollectionReference ref = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("favorites");
+                Query q = ref.whereEqualTo("recepeID", recepieList.get(position).getRecepeID());
 
-                }else{
-                    favoriteRef.document(recepieID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(view.getContext(), R.string.removeFavorite, Toast.LENGTH_LONG).show();
-                            favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                            recepieItem.setFavorite(false);
+                q.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.getResult().isEmpty()) {
+                            HashMap<String, String> data = new HashMap<>();
+                            data.put("recepeID", recepieID);
+                            favoriteRef.document(recepieID).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    favoriteButton.setImageResource(R.drawable.ic_favorite_color_24dp);
+                                    Toast.makeText(view.getContext(), R.string.addFavorite, Toast.LENGTH_LONG).show();
+
+                                }
+                            });
+                        } else {
+                            favoriteRef.document(recepieID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(view.getContext(), R.string.removeFavorite, Toast.LENGTH_LONG).show();
+                                    favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                                }
+                            });
                         }
-                    });
-                }
+
+                    }
+                });
+
             }
-
         }
-
     }
 
     public RecepieListAdapter(List<Recept> recepieList) {
@@ -146,16 +153,26 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-        RecepieViewHolder vh = (RecepieViewHolder) viewHolder;
+        final RecepieViewHolder vh = (RecepieViewHolder) viewHolder;
         vh.textView.setText(recepieList.get(i).getTitle());
         vh.textView2.setText(recepieList.get(i).getDescription());
         vh.imageView.setImageResource(recepieList.get(i).getImage());
 
-        if(recepieList.get(i).isFavorite()){
-            vh.favoriteButton.setImageResource(R.drawable.ic_favorite_color_24dp);
-        }else{
-            vh.favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-        }
+
+        CollectionReference ref = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("favorites");
+        Query q = ref.whereEqualTo("recepeID", recepieList.get(i).getRecepeID());
+
+        q.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.getResult().isEmpty()) {
+                    vh.favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                } else {
+                    vh.favoriteButton.setImageResource(R.drawable.ic_favorite_color_24dp);
+                }
+
+            }
+        });
 
 
     }
