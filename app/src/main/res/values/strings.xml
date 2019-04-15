@@ -37,4 +37,7 @@
     <string name="prompt_password_repeat">Repetera lösenord</string>
     <string name="changePasswordButton">Byt lösenord</string>
     <string name="promt_password_change">Nytt lösenord</string>
+
+    <string name="recepeAddTitle">Namn på recept</string>
+    <string name="recepeAddAllergy">Specialkost/Allergiinformation</string>
 </resources>
