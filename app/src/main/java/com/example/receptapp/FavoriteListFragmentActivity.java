@@ -104,6 +104,7 @@ public class FavoriteListFragmentActivity extends Fragment {
                                     Recept recept = d.toObject(Recept.class);
                                     receptLista.add(recept);
                                     recept.setRecepeID(d.getId());
+                                    Log.d("!!!", String.valueOf(receptLista.size()));
                                 }
                             }
                             adapterF.notifyDataSetChanged();
