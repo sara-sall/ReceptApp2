@@ -1,9 +1,11 @@
 package com.example.receptapp;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -52,6 +54,8 @@ public class RecepieListFragmentActivity extends Fragment {
     private ImageView favoriteButton;
     private ArrayList<Recept> receptLista;
 
+    private FloatingActionButton fab;
+
     private FirebaseFirestore db;
     private CollectionReference receptRef;
 
@@ -72,7 +76,16 @@ public class RecepieListFragmentActivity extends Fragment {
         toolbar = (Toolbar) v.findViewById(R.id.toolbarID);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.toolbarTitleRecepe);
+        setHasOptionsMenu(true);
 
+        fab = v.findViewById(R.id.fabAdd);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), AddRecepeActivity.class);
+                v.getContext().startActivity(intent);
+            }
+        });
 
 
         receptLista = new ArrayList<Recept>();

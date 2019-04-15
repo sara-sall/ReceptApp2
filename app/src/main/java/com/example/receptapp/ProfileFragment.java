@@ -82,21 +82,4 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.menuSearch);
-        item.setVisible(false);
-
-        super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu, menu);
-        MenuItem item = menu.findItem(R.id.menuSearch);
-        item.setVisible(false);
-
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
 }

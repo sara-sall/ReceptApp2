@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -65,6 +66,7 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
         public Context mContext;
 
 
+
         public RecepieViewHolder(@NonNull View itemView) {
 
             super(itemView);
@@ -83,8 +85,10 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
             imageView = itemView.findViewById(R.id.recepieSquareImage);
             favoriteButton = itemView.findViewById(R.id.favoriteButtonID);
             main = itemView.findViewById(R.id.recepieSquareMain);
+
             main.setOnClickListener(this);
             favoriteButton.setOnClickListener(this);
+
 
             mContext = itemView.getContext();
 
@@ -139,6 +143,8 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
                 });
 
             }
+
+
         }
     }
 

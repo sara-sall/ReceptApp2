@@ -9,9 +9,12 @@
         android:id="@+id/nav_favorites"
         android:icon="@drawable/ic_favorite_white_24dp"
         android:title="@string/favoriteMeny"/>
+    
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_person_white_24dp"
         android:title="@string/profileMeny"/>
+
+
 
 </menu>
