@@ -3,6 +3,7 @@ package com.example.receptapp;
 import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -30,6 +31,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +62,8 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
         private FirebaseFirestore db;
         private CollectionReference favoriteRef;
 
+        public Context mContext;
+
 
         public RecepieViewHolder(@NonNull View itemView) {
 
@@ -79,6 +85,8 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
             main = itemView.findViewById(R.id.recepieSquareMain);
             main.setOnClickListener(this);
             favoriteButton.setOnClickListener(this);
+
+            mContext = itemView.getContext();
 
 
         }
@@ -152,11 +160,32 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int in) {
         final RecepieViewHolder vh = (RecepieViewHolder) viewHolder;
+        final int i = in;
         vh.textView.setText(recepieList.get(i).getTitle());
         vh.textView2.setText(recepieList.get(i).getDescription());
-        vh.imageView.setImageResource(recepieList.get(i).getImage());
+
+
+        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
+
+        StorageReference sr = firebaseStorage.getReference().child(recepieList.get(i).getRecepeID() + ".jpg");
+
+        sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.with(context).load(uri).into(vh.imageView);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Picasso.with(context).load(R.drawable.ic_restaurant_color_24dp).into(vh.imageView);
+                vh.imageView.setImageResource(recepieList.get(i).getImage());
+            }
+        });
+
+
+
 
 
         CollectionReference ref = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("favorites");

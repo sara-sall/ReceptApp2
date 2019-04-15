@@ -1,6 +1,8 @@
 package com.example.receptapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -27,6 +29,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +47,7 @@ public class RecepieActivity extends AppCompatActivity {
     ImageView rImage;
     private String recepeID;
     private Recept recept;
+    private Context context;
 
     private FloatingActionButton fab;
 
@@ -69,6 +75,7 @@ public class RecepieActivity extends AppCompatActivity {
         ingrList = (TextView) findViewById(R.id.ingredientsID);
         instText = (TextView) findViewById(R.id.instructionsID);
         toolbar.setTitle("");
+        context = getApplicationContext();
 
         Bundle b = new Bundle();
         b = getIntent().getExtras();
@@ -130,6 +137,25 @@ public class RecepieActivity extends AppCompatActivity {
             }
         });
 
+        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
+
+        StorageReference sr = firebaseStorage.getReference().child(recepeID + ".jpg");
+
+        sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.with(context).load(uri).into(rImage);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Picasso.with(context).load(R.drawable.ic_restaurant_color_24dp).into(rImage);
+                rImage.setImageResource(R.drawable.ic_restaurant_color_24dp);
+            }
+        });
+
+
+
         receptRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -138,9 +164,11 @@ public class RecepieActivity extends AppCompatActivity {
                     if(document.exists()){
                         recept = document.toObject(Recept.class);
                         descText.setText(recept.getDescription());
-                        rImage.setImageResource(recept.getImage());
+                       // rImage.setImageResource(recept.getImage());
                         toolbar.setTitle(recept.getTitle());
                         instText.setText(recept.getInstructions());
+
+
 
                         String ingredients = "";
                         for(String i : recept.getIngredients()){

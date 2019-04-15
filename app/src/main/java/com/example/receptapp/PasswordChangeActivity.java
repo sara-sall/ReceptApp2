@@ -103,7 +103,8 @@ public class PasswordChangeActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), "Något gick fel", Toast.LENGTH_LONG).show();
+                    Log.d("!!!", task.getException().toString());
+                    Toast.makeText(getApplicationContext(), "Något gick fel, testa att logga ut och in igen innan byte", Toast.LENGTH_LONG).show();
                 }
             }
         });
