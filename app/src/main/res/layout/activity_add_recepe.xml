@@ -36,7 +36,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_restaurant_color_24dp"
                     android:visibility="gone"/>
 
 
@@ -345,6 +344,13 @@
                 </TableLayout>
 
             </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressbarAR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/recepePreviewID"

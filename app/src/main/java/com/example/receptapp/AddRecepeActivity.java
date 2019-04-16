@@ -1,7 +1,11 @@
 package com.example.receptapp;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.net.Uri;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -9,24 +13,43 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class AddRecepeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
+    private ProgressBar progressBar;
 
     private LinearLayout addImageBtn;
     private ImageView recepeImage;
+
+    private static final int PICK_IMAGE_REQUEST =1;
+    private Uri imageUri;
+    private String uniqueId;
 
     private EditText recepeTitle;
     private EditText recepeDesc;
@@ -58,7 +81,11 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     private FirebaseFirestore db;
     private CollectionReference receptRef;
 
+    private StorageReference imageStorageRef;
+    private StorageReference fileReference;
+
     private Button previewBtn;
+    private Button addRecepeBtn;
 
     int ingrNr = 0;
     @Override
@@ -71,6 +98,10 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         this.setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        progressBar = (ProgressBar) findViewById(R.id.progressbarAR);
+
+        imageStorageRef = FirebaseStorage.getInstance().getReference();
 
         idList = new ArrayList();
         ingrList = new ArrayList();
@@ -87,6 +118,9 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
         previewBtn = (Button) findViewById(R.id.recepePreviewID);
         previewBtn.setOnClickListener(this);
+
+        addRecepeBtn = (Button) findViewById(R.id.recepeCreateID);
+        addRecepeBtn.setOnClickListener(this);
 
         cbBakelse = (CheckBox) findViewById(R.id.cbBakelse);
         cbFisk = (CheckBox) findViewById(R.id.cbFisk);
@@ -120,11 +154,9 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
         switch (v.getId()){
             case R.id.addImageLayout:
-
+                openFileChooser();
                 if(recepeImage.getVisibility() == View.GONE){
                     recepeImage.setVisibility(View.VISIBLE);
-                }else{
-                    recepeImage.setVisibility(View.GONE);
                 }
                 break;
 
@@ -140,8 +172,6 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
                 textInputLayout.setLayoutParams(textInputLayoutParams);
                 textInputLayout.addView(editText);
-               // textInputLayout.setDefaultHintTextColor(R.color.colorAccent);
-                //textInputLayout.setHint("Ingrediens");
                 editText.setId(100 + ingrNr);
                 editText.setMaxLines(1);
                 editText.setHint(R.string.addIngredient);
@@ -195,12 +225,17 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
                     return;
                 }
 
-                Intent intent = new Intent(AddRecepeActivity.this, RecepePreviewActivity.class);
+
+               Intent intent = new Intent(AddRecepeActivity.this, RecepePreviewActivity.class);
 
                 intent.putExtra("title", title);
                 intent.putExtra("desc", desc);
                 intent.putExtra("ingrList", ingrList);
                 intent.putExtra("inst", inst);
+
+                if(imageUri != null){
+                    intent.putExtra("image", imageUri);
+                }
 
                 startActivity(intent);
                 break;
@@ -273,16 +308,9 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
                     tags.add("frukt");
                 }
 
-                db = FirebaseFirestore.getInstance();
-                receptRef = db.collection("recept");
+                Log.d("!!!", "1");
 
-                Recept r = new Recept(title, desc, ingrList, inst, tags, "");
-
-                receptRef.add(r);
-
-                Intent i = new Intent(AddRecepeActivity.this, MainActivity.class);
-
-                startActivity(i);
+                uploadRecepe(title, desc, inst);
 
                 break;
 
@@ -300,7 +328,81 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
         }
 
+    }
 
+    private void openFileChooser(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
+            imageUri = data.getData();
+
+            Picasso.with(this).load(imageUri).resize(250, 250).onlyScaleDown().centerInside().into(recepeImage);
+        }
+    }
+
+    private String getFileExtension(Uri uri){
+        ContentResolver cR = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+
+    }
+
+    private void uploadRecepe(String title, String desc, String inst){
+
+        if(imageUri != null){
+            uniqueId = UUID.randomUUID().toString();
+            fileReference = imageStorageRef.child(uniqueId + "." + getFileExtension(imageUri));
+            fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressBar.setVisibility(View.GONE);
+                    Log.d("!!!", "2");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), "Bild kunde inte laddas upp", Toast.LENGTH_SHORT).show();
+                    //return;
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+
+        Log.d("!!!", "3");
+
+        db = FirebaseFirestore.getInstance();
+        receptRef = db.collection("recept");
+        String image = "";
+        if(imageUri != null){
+            image = uniqueId + "." + getFileExtension(imageUri);
+        }
+
+        Recept r = new Recept(title, desc, ingrList, inst, tags, "", image);
+        receptRef.add(r).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Intent i = new Intent(AddRecepeActivity.this, MainActivity.class);
+                startActivity(i);
+                Log.d("!!!", "4");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Recept kunde inte laddas upp", Toast.LENGTH_SHORT).show();
+            }
+        });
+        Log.d("!!!", "5");
     }
 }

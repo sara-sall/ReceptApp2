@@ -49,9 +49,12 @@ public class RecepieActivity extends AppCompatActivity {
     private Recept recept;
     private Context context;
 
+    private String imageUrl;
+
     private FloatingActionButton fab;
 
     private FirebaseFirestore db;
+
     private DocumentReference receptRef;
     private CollectionReference favoriteRef;
 
@@ -62,6 +65,8 @@ public class RecepieActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recepie);
+
+        final FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -76,6 +81,8 @@ public class RecepieActivity extends AppCompatActivity {
         instText = (TextView) findViewById(R.id.instructionsID);
         toolbar.setTitle("");
         context = getApplicationContext();
+
+        imageUrl = "";
 
         Bundle b = new Bundle();
         b = getIntent().getExtras();
@@ -137,25 +144,6 @@ public class RecepieActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
-
-        StorageReference sr = firebaseStorage.getReference().child(recepeID + ".jpg");
-
-        sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.with(context).load(uri).resizeDimen(R.dimen.imageSizeRecepe, R.dimen.imageSizeRecepe).onlyScaleDown().centerInside().into(rImage);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Picasso.with(context).load(R.drawable.ic_restaurant_color_24dp).into(rImage);
-                rImage.setImageResource(R.drawable.ic_restaurant_color_24dp);
-            }
-        });
-
-
-
         receptRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -167,8 +155,7 @@ public class RecepieActivity extends AppCompatActivity {
                        // rImage.setImageResource(recept.getImage());
                         toolbar.setTitle(recept.getTitle());
                         instText.setText(recept.getInstructions());
-
-
+                        imageUrl = recept.getImageLink();
 
                         String ingredients = "";
                         for(String i : recept.getIngredients()){
@@ -179,6 +166,26 @@ public class RecepieActivity extends AppCompatActivity {
                         if(isFavorite){
                             fab.setImageResource(R.drawable.ic_favorite_white_24dp);
                         }
+
+                        if(!imageUrl.equals("")){
+                            StorageReference sr = firebaseStorage.getReference().child(imageUrl);
+                            sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Picasso.with(context).load(uri).resizeDimen(R.dimen.imageSizeRecepe, R.dimen.imageSizeRecepe).onlyScaleDown().centerInside().into(rImage);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Picasso.with(context).load(R.drawable.ic_restaurant_color_24dp).into(rImage);
+                                    rImage.setImageResource(R.drawable.ic_restaurant_color_24dp);
+                                }
+                            });
+                        }else{
+                            Picasso.with(context).load(R.drawable.ic_restaurant_color_24dp).into(rImage);
+                            rImage.setImageResource(R.drawable.ic_restaurant_color_24dp);
+                        }
+
                     }
                     else{
                         Log.d("!!!", "No document found");

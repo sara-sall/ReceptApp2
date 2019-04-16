@@ -175,20 +175,26 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
 
         FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
 
-        StorageReference sr = firebaseStorage.getReference().child(recepieList.get(i).getRecepeID() + ".jpg");
+        if(!recepieList.get(i).getImageLink().equals("")){
+            StorageReference sr = firebaseStorage.getReference().child(recepieList.get(i).getImageLink());
+            sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.with(context).load(uri).resize(150, 95).onlyScaleDown().centerCrop().into(vh.imageView);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Picasso.with(context).load(R.drawable.ic_restaurant_color_24dp).into(vh.imageView);
+                    vh.imageView.setImageResource(R.drawable.ic_restaurant_color_24dp);
+                }
+            });
+        }else{
+            Picasso.with(context).load(R.drawable.ic_restaurant_color_24dp).into(vh.imageView);
+            vh.imageView.setImageResource(R.drawable.ic_restaurant_color_24dp);
+        }
 
-        sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.with(context).load(uri).resizeDimen(R.dimen.imageSizeRecycler, R.dimen.imageSizeRecycler).onlyScaleDown().centerInside().into(vh.imageView);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Picasso.with(context).load(R.drawable.ic_restaurant_color_24dp).into(vh.imageView);
-                vh.imageView.setImageResource(R.drawable.ic_restaurant_color_24dp);
-            }
-        });
+
 
 
 

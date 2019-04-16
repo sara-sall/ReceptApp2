@@ -45,6 +45,7 @@ public class RecepePreviewActivity extends AppCompatActivity {
     boolean isFavorite = true;
     Toolbar toolbar;
     ImageView rImage;
+    private Uri imageUri;
     private String recepeTitle;
     private String recepeDescription;
     private String recepeInstructions;
@@ -83,6 +84,10 @@ public class RecepePreviewActivity extends AppCompatActivity {
             recepeDescription = (String) b.get("desc");
             recepeInstructions = (String) b.get("inst");
             ingridientList = (ArrayList) b.get("ingrList");
+            if((Uri) b.get("image") != null){
+                imageUri = (Uri) b.get("image");
+                rImage.setImageURI(imageUri);
+            }
 
             descText.setText(recepeDescription);
             // rImage.setImageResource(recept.getImage());
