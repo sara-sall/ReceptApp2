@@ -144,7 +144,7 @@ public class RecepieActivity extends AppCompatActivity {
         sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.with(context).load(uri).into(rImage);
+                Picasso.with(context).load(uri).resizeDimen(R.dimen.imageSizeRecepe, R.dimen.imageSizeRecepe).onlyScaleDown().centerInside().into(rImage);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

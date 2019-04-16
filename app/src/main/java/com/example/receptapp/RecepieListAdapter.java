@@ -180,7 +180,7 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
         sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.with(context).load(uri).into(vh.imageView);
+                Picasso.with(context).load(uri).resizeDimen(R.dimen.imageSizeRecycler, R.dimen.imageSizeRecycler).onlyScaleDown().centerInside().into(vh.imageView);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
