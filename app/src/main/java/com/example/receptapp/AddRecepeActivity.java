@@ -24,6 +24,10 @@ import java.util.ArrayList;
 public class AddRecepeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
+
+    private LinearLayout addImageBtn;
+    private ImageView recepeImage;
+
     private EditText recepeTitle;
     private EditText recepeDesc;
     private EditText recepeIngr;
@@ -72,6 +76,10 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         ingrList = new ArrayList();
         tags = new ArrayList();
 
+        addImageBtn = (LinearLayout) findViewById(R.id.addImageLayout);
+        addImageBtn.setOnClickListener(this);
+        recepeImage = (ImageView) findViewById(R.id.imageLayout);
+
         recepeTitle = (EditText) findViewById(R.id.recepeTitleID);
         recepeDesc = (EditText) findViewById(R.id.recepeDescID);
         recepeIngr = (EditText) findViewById(R.id.ingredientID);
@@ -111,6 +119,16 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
 
         switch (v.getId()){
+            case R.id.addImageLayout:
+
+                if(recepeImage.getVisibility() == View.GONE){
+                    recepeImage.setVisibility(View.VISIBLE);
+                }else{
+                    recepeImage.setVisibility(View.GONE);
+                }
+                break;
+
+
             case R.id.addMorIngrButton:
                 TextInputEditText editText = new TextInputEditText(this);
                 LinearLayout ingrLayout = (LinearLayout) findViewById(R.id.ingrLayoutID);
