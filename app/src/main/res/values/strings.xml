@@ -41,4 +41,6 @@
     <string name="recepeAddTitle">Namn på recept</string>
     <string name="recepeAddAllergy">Specialkost/Allergiinformation</string>
     <string name="addIngredient">Ingrediens</string>
+    <string name="previewRecepie">Visa receptet</string>
+    <string name="createRecepe">Skapa recept</string>
 </resources>

@@ -11,7 +11,7 @@ public class Recept {
     ArrayList<String> ingredients;
     String instructions;
     ArrayList<String>tags;
-    boolean favorite;
+    //boolean favorite;
     int image;
     String recepeID;
 
@@ -25,7 +25,7 @@ public class Recept {
         this.recepeID = recepeID;
     }
 
-    public Recept(String title, String description, ArrayList ingredients, String instructions, ArrayList tags, boolean favorite, String recepeID) {
+    public Recept(String title, String description, ArrayList ingredients, String instructions, ArrayList tags, String recepeID) {
         this.title = title;
         this.description = description;
         this.image = R.drawable.ic_restaurant_color_24dp;
@@ -33,7 +33,7 @@ public class Recept {
         this.ingredients = ingredients;
         this.instructions = instructions;
         this.tags = tags;
-        this.favorite = favorite;
+        //this.favorite = favorite;
         this.recepeID = recepeID;
     }
 
@@ -85,12 +85,12 @@ public class Recept {
         this.image = R.drawable.ic_restaurant_color_24dp;
     }
 
-    public boolean isFavorite() {
+/*    public boolean isFavorite() {
         return favorite;
     }
 
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
-    }
+    }*/
 }
 

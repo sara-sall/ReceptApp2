@@ -1,6 +1,7 @@
 package com.example.receptapp;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -23,12 +28,31 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     private EditText recepeDesc;
     private EditText recepeIngr;
     private EditText recepeInst;
-    private CheckBox recepeCB;
+    private CheckBox cbKött;
+    private CheckBox cbKyckling;
+    private CheckBox cbFisk;
+    private CheckBox cbLax;
+    private CheckBox cbVego;
+    private CheckBox cbPasta;
+    private CheckBox cbPotatis;
+    private CheckBox cbRis;
+    private CheckBox cbBakelse;
+    private CheckBox cbFrukt;
+
+    private LinearLayout tagsBtn;
+    private TableLayout tagsLay;
+    private ImageView tagArrow;
+
     private ImageView ingrButton;
 
     private EditText rIngr;
 
     private ArrayList idList;
+    private ArrayList ingrList;
+    private ArrayList tags;
+
+    private FirebaseFirestore db;
+    private CollectionReference receptRef;
 
     private Button previewBtn;
 
@@ -45,6 +69,8 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         idList = new ArrayList();
+        ingrList = new ArrayList();
+        tags = new ArrayList();
 
         recepeTitle = (EditText) findViewById(R.id.recepeTitleID);
         recepeDesc = (EditText) findViewById(R.id.recepeDescID);
@@ -53,6 +79,22 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
         previewBtn = (Button) findViewById(R.id.recepePreviewID);
         previewBtn.setOnClickListener(this);
+
+        cbBakelse = (CheckBox) findViewById(R.id.cbBakelse);
+        cbFisk = (CheckBox) findViewById(R.id.cbFisk);
+        cbFrukt = (CheckBox) findViewById(R.id.cbFrukt);
+        cbKyckling = (CheckBox) findViewById(R.id.cbKyckling);
+        cbKött = (CheckBox) findViewById(R.id.cbKött);
+        cbLax = (CheckBox) findViewById(R.id.cbLax);
+        cbPasta = (CheckBox) findViewById(R.id.cbPasta);
+        cbPotatis = (CheckBox) findViewById(R.id.cbPotatis);
+        cbRis = (CheckBox) findViewById(R.id.cbRis);
+        cbVego = (CheckBox) findViewById(R.id.cbVegetarisk);
+
+        tagsBtn = (LinearLayout) findViewById(R.id.tagsButtonLayout);
+        tagsBtn.setOnClickListener(this);
+        tagsLay = (TableLayout) findViewById(R.id.tagsLayout);
+        tagArrow = (ImageView) findViewById(R.id.tagsArrow);
 
 
         ingrButton = (ImageView) findViewById(R.id.addMorIngrButton);
@@ -101,7 +143,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
                 String desc = recepeDesc.getText().toString().trim();
                 String ingr = recepeIngr.getText().toString().trim();
                 String inst = recepeInst.getText().toString().trim();
-                ArrayList<String> ingrList = new ArrayList();
+                ingrList.clear();
                 ingrList.add(ingr);
 
                 for(int i = 0; i<ingrNr; i++){
@@ -143,6 +185,101 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
                 intent.putExtra("inst", inst);
 
                 startActivity(intent);
+                break;
+
+            case R.id.recepeCreateID:
+                title = recepeTitle.getText().toString().trim();
+                desc = recepeDesc.getText().toString().trim();
+                ingr = recepeIngr.getText().toString().trim();
+                inst = recepeInst.getText().toString().trim();
+                ingrList.clear();
+                tags.clear();
+                ingrList.add(ingr);
+
+                for(int i = 0; i<ingrNr; i++){
+                    String ID = String.valueOf(idList.get(i));
+                    rIngr = (EditText)findViewById(Integer.parseInt(ID));
+                    String ingredient = rIngr.getText().toString().trim();
+                    if(!ingredient.equals("")){
+                        ingrList.add(ingredient);
+                    }
+                }
+
+                if(title.isEmpty()){
+                    recepeTitle.setError("Recepttitel behöver fyllas i");
+                    recepeTitle.requestFocus();
+                    return;
+                }
+                if(desc.isEmpty()){
+                    recepeDesc.setError("Specialkost behöver fyllas i");
+                    recepeDesc.requestFocus();
+                    return;
+                }
+                if(ingr.isEmpty()){
+                    recepeIngr = (EditText) findViewById(R.id.ingredientID);
+                    recepeIngr.setError("Recepttitel behöver fyllas i");
+                    recepeIngr.requestFocus();
+                    return;
+                }
+                if(inst.isEmpty()){
+                    recepeInst.setError("Instruktioner behöver fyllas i");
+                    recepeInst.requestFocus();
+                    return;
+                }
+
+                if(cbBakelse.isChecked()){
+                    tags.add("bakelse");
+                }
+                if(cbVego.isChecked()){
+                    tags.add("vegetarisk");
+                }
+                if(cbRis.isChecked()){
+                    tags.add("ris");
+                }
+                if(cbPotatis.isChecked()){
+                    tags.add("potatis");
+                }
+                if(cbPasta.isChecked()){
+                    tags.add("pasta");
+                }
+                if(cbLax.isChecked()){
+                    tags.add("lax");
+                }
+                if(cbKött.isChecked()){
+                    tags.add("kött");
+                }
+                if(cbKyckling.isChecked()){
+                    tags.add("kyckling");
+                }
+                if(cbFrukt.isChecked()) {
+                    tags.add("frukt");
+                }
+
+                db = FirebaseFirestore.getInstance();
+                receptRef = db.collection("recept");
+
+                Recept r = new Recept(title, desc, ingrList, inst, tags, "");
+
+                receptRef.add(r);
+
+                Intent i = new Intent(AddRecepeActivity.this, MainActivity.class);
+
+                startActivity(i);
+
+                break;
+
+            case R.id.tagsButtonLayout:
+                int vis = tagsLay.getVisibility();
+                if(vis == View.VISIBLE){
+                    tagsLay.setVisibility(View.GONE);
+                    tagArrow.setImageResource(R.drawable.ic_arrow_drop_down_black_24dp);
+                }else{
+                    tagsLay.setVisibility(View.VISIBLE);
+                    tagArrow.setImageResource(R.drawable.ic_arrow_drop_up_black_24dp);
+                }
+                break;
+
+
         }
 
 

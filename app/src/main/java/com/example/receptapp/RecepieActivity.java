@@ -176,7 +176,7 @@ public class RecepieActivity extends AppCompatActivity {
                         }
                         ingrList.setText(ingredients);
 
-                        if(recept.isFavorite()){
+                        if(isFavorite){
                             fab.setImageResource(R.drawable.ic_favorite_white_24dp);
                         }
                     }

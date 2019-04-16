@@ -136,18 +136,47 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="20dp"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:text="Tags"
-                    android:textSize="20sp" />
-
-                <TableLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="start">
+
+
+                    <LinearLayout
+                        android:id="@+id/tagsButtonLayout"
+                        android:clickable="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="20dp"
+                            android:text="Etiketter"
+                            android:layout_marginStart="5dp"
+
+                            />
+
+                        <ImageView
+                            android:id="@+id/tagsArrow"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            app:srcCompat="@drawable/ic_arrow_drop_up_black_24dp" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+
+                <TableLayout
+                    android:id="@+id/tagsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
                     >
 
                     <TableRow
@@ -169,25 +198,26 @@
                             android:layout_weight="1"
                             android:text="Pasta"
                             android:textColor="@color/colorPrimary"/>
+
                     </TableRow>
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" >
 
                         <CheckBox
-                            android:id="@+id/checkBox2"
+                            android:id="@+id/cbFisk"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="CheckBox"
+                            android:text="Fisk"
                             android:textColor="@color/colorPrimary"/>
 
                         <CheckBox
-                            android:id="@+id/checkBox3"
+                            android:id="@+id/cbPotatis"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="CheckBox"
+                            android:text="Potatis"
                             android:textColor="@color/colorPrimary"/>
                     </TableRow>
                     <TableRow
@@ -195,19 +225,59 @@
                         android:layout_height="match_parent" >
 
                         <CheckBox
-                            android:id="@+id/checkBox2"
+                            android:id="@+id/cbLax"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="CheckBox"
+                            android:text="Lax"
                             android:textColor="@color/colorPrimary"/>
 
                         <CheckBox
-                            android:id="@+id/checkBox3"
+                            android:id="@+id/cbRis"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="CheckBox"
+                            android:text="Ris"
+                            android:textColor="@color/colorPrimary"/>
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                        <CheckBox
+                            android:id="@+id/cbKött"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Kött"
+                            android:textColor="@color/colorPrimary"/>
+
+                        <CheckBox
+                            android:id="@+id/cbBakelse"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Bakelse"
+                            android:textColor="@color/colorPrimary"/>
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                        <CheckBox
+                            android:id="@+id/cbVegetarisk"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Vegetarisk"
+                            android:textColor="@color/colorPrimary"/>
+
+                        <CheckBox
+                            android:id="@+id/cbFrukt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Frukt"
                             android:textColor="@color/colorPrimary"/>
                     </TableRow>
 
@@ -220,8 +290,21 @@
                 android:id="@+id/recepePreviewID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="30dp"
-                android:text="Button" />
+                android:layout_marginRight="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/previewRecepie" />
+
+            <Button
+                android:id="@+id/recepeCreateID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:text="@string/createRecepe" />
+
 
         </LinearLayout>
 

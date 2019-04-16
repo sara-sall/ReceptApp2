@@ -110,7 +110,7 @@ public class RecepieListFragmentActivity extends Fragment {
                 "Stek pannkakorna i stekpanna och servera sedan med sylt och glass!";
 
 
-        Recept r = new Recept(title, desc, ingredients, inst, tags, false, "");
+        Recept r = new Recept(title, desc, ingredients, inst, tags, "");
 
         //receptRef.add(r);
 
