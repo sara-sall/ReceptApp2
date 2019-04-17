@@ -32,6 +32,15 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/imageDeleteButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_delete_color_24dp"
+                    android:clickable="true"
+                    android:layout_alignRight="@id/imageLayout"
+                    android:visibility="gone"/>
+
+                <ImageView
                     android:id="@+id/imageLayout"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"

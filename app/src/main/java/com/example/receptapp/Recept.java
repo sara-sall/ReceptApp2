@@ -12,9 +12,8 @@ public class Recept {
     String instructions;
     ArrayList<String>tags;
     String imageLink;
-    //boolean favorite;
-    int image;
     String recepeID;
+    String creator;
 
     public Recept(){};
 
@@ -26,16 +25,23 @@ public class Recept {
         this.recepeID = recepeID;
     }
 
-    public Recept(String title, String description, ArrayList ingredients, String instructions, ArrayList tags, String recepeID, String imageLink) {
+    public Recept(String title, String description, ArrayList ingredients, String instructions, ArrayList tags, String recepeID, String imageLink, String creator) {
         this.title = title;
         this.description = description;
-        this.image = R.drawable.ic_restaurant_color_24dp;
-        Log.d("!!!", "Recept: " + R.drawable.ic_restaurant_color_24dp);
         this.ingredients = ingredients;
         this.instructions = instructions;
         this.tags = tags;
         this.recepeID = recepeID;
         this.imageLink = imageLink;
+        this.creator = creator;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public String getImageLink() {

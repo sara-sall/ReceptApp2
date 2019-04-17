@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,6 +47,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
     private LinearLayout addImageBtn;
     private ImageView recepeImage;
+    private ImageView imageDeleteBtn;
 
     private static final int PICK_IMAGE_REQUEST =1;
     private Uri imageUri;
@@ -70,9 +72,16 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     private TableLayout tagsLay;
     private ImageView tagArrow;
 
+    private String creator;
+
     private ImageView ingrButton;
 
     private EditText rIngr;
+
+    private String title;
+    private String desc;
+    private String ingr;
+    private String inst;
 
     private ArrayList idList;
     private ArrayList ingrList;
@@ -83,6 +92,8 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
     private StorageReference imageStorageRef;
     private StorageReference fileReference;
+
+    private FirebaseAuth mAuth;
 
     private Button previewBtn;
     private Button addRecepeBtn;
@@ -101,6 +112,8 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
         progressBar = (ProgressBar) findViewById(R.id.progressbarAR);
 
+        mAuth = FirebaseAuth.getInstance();
+
         imageStorageRef = FirebaseStorage.getInstance().getReference();
 
         idList = new ArrayList();
@@ -110,6 +123,8 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         addImageBtn = (LinearLayout) findViewById(R.id.addImageLayout);
         addImageBtn.setOnClickListener(this);
         recepeImage = (ImageView) findViewById(R.id.imageLayout);
+        imageDeleteBtn = (ImageView) findViewById(R.id.imageDeleteButton);
+        imageDeleteBtn.setOnClickListener(this);
 
         recepeTitle = (EditText) findViewById(R.id.recepeTitleID);
         recepeDesc = (EditText) findViewById(R.id.recepeDescID);
@@ -155,9 +170,12 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         switch (v.getId()){
             case R.id.addImageLayout:
                 openFileChooser();
-                if(recepeImage.getVisibility() == View.GONE){
-                    recepeImage.setVisibility(View.VISIBLE);
-                }
+                break;
+
+            case R.id.imageDeleteButton:
+                imageUri = null;
+                imageDeleteBtn.setVisibility(View.GONE);
+                recepeImage.setVisibility(View.GONE);
                 break;
 
 
@@ -182,139 +200,37 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
                 idList.add(editText.getId());
                 ingrNr += 1;
-                //setContentView(textInputLayout);
-                Log.d("!!!", String.valueOf(editText.getId()));
+
                 break;
 
             case R.id.recepePreviewID:
-                String title = recepeTitle.getText().toString().trim();
-                String desc = recepeDesc.getText().toString().trim();
-                String ingr = recepeIngr.getText().toString().trim();
-                String inst = recepeInst.getText().toString().trim();
-                ingrList.clear();
-                ingrList.add(ingr);
 
-                for(int i = 0; i<ingrNr; i++){
-                    String ID = String.valueOf(idList.get(i));
-                    rIngr = (EditText)findViewById(Integer.parseInt(ID));
-                    String ingredient = rIngr.getText().toString().trim();
-                    if(!ingredient.equals("")){
-                        ingrList.add(ingredient);
+                if (checkInput()){
+                    Intent intent = new Intent(AddRecepeActivity.this, RecepePreviewActivity.class);
+
+                    intent.putExtra("title", title);
+                    intent.putExtra("desc", desc);
+                    intent.putExtra("ingrList", ingrList);
+                    intent.putExtra("inst", inst);
+
+                    if(imageUri != null){
+                        intent.putExtra("image", imageUri);
                     }
+
+                    startActivity(intent);
                 }
 
-                if(title.isEmpty()){
-                    recepeTitle.setError("Recepttitel behöver fyllas i");
-                    recepeTitle.requestFocus();
-                    return;
-                }
-                if(desc.isEmpty()){
-                    recepeDesc.setError("Specialkost behöver fyllas i");
-                    recepeDesc.requestFocus();
-                    return;
-                }
-                if(ingr.isEmpty()){
-                    recepeIngr = (EditText) findViewById(R.id.ingredientID);
-                    recepeIngr.setError("Recepttitel behöver fyllas i");
-                    recepeIngr.requestFocus();
-                    return;
-                }
-                if(inst.isEmpty()){
-                    recepeInst.setError("Instruktioner behöver fyllas i");
-                    recepeInst.requestFocus();
-                    return;
-                }
-
-
-               Intent intent = new Intent(AddRecepeActivity.this, RecepePreviewActivity.class);
-
-                intent.putExtra("title", title);
-                intent.putExtra("desc", desc);
-                intent.putExtra("ingrList", ingrList);
-                intent.putExtra("inst", inst);
-
-                if(imageUri != null){
-                    intent.putExtra("image", imageUri);
-                }
-
-                startActivity(intent);
                 break;
 
             case R.id.recepeCreateID:
-                title = recepeTitle.getText().toString().trim();
-                desc = recepeDesc.getText().toString().trim();
-                ingr = recepeIngr.getText().toString().trim();
-                inst = recepeInst.getText().toString().trim();
-                ingrList.clear();
+
                 tags.clear();
-                ingrList.add(ingr);
 
-                for(int i = 0; i<ingrNr; i++){
-                    String ID = String.valueOf(idList.get(i));
-                    rIngr = (EditText)findViewById(Integer.parseInt(ID));
-                    String ingredient = rIngr.getText().toString().trim();
-                    if(!ingredient.equals("")){
-                        ingrList.add(ingredient);
-                    }
-                }
+                checkTags();
 
-                if(title.isEmpty()){
-                    recepeTitle.setError("Recepttitel behöver fyllas i");
-                    recepeTitle.requestFocus();
-                    return;
+                if(checkInput()){
+                    uploadRecepe();
                 }
-                if(desc.isEmpty()){
-                    recepeDesc.setError("Specialkost behöver fyllas i");
-                    recepeDesc.requestFocus();
-                    return;
-                }
-                if(ingr.isEmpty()){
-                    recepeIngr = (EditText) findViewById(R.id.ingredientID);
-                    recepeIngr.setError("Recepttitel behöver fyllas i");
-                    recepeIngr.requestFocus();
-                    return;
-                }
-                if(inst.isEmpty()){
-                    recepeInst.setError("Instruktioner behöver fyllas i");
-                    recepeInst.requestFocus();
-                    return;
-                }
-
-                if(cbBakelse.isChecked()){
-                    tags.add("bakelse");
-                }
-                if(cbVego.isChecked()){
-                    tags.add("vegetarisk");
-                }
-                if(cbRis.isChecked()){
-                    tags.add("ris");
-                }
-                if(cbPotatis.isChecked()){
-                    tags.add("potatis");
-                }
-                if(cbPasta.isChecked()){
-                    tags.add("pasta");
-                }
-                if(cbLax.isChecked()){
-                    tags.add("lax");
-                }
-                if(cbKött.isChecked()){
-                    tags.add("kött");
-                }
-                if(cbKyckling.isChecked()){
-                    tags.add("kyckling");
-                }
-                if(cbFrukt.isChecked()) {
-                    tags.add("frukt");
-                }
-                if(cbFisk.isChecked()){
-                    tags.add("fisk");
-                }
-
-                Log.d("!!!", tags.toString());
-
-                uploadRecepe(title, desc, inst);
-
                 break;
 
             case R.id.tagsButtonLayout:
@@ -328,9 +244,41 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
                 }
                 break;
 
-
         }
 
+    }
+
+    private void checkTags(){
+        if(cbBakelse.isChecked()){
+            tags.add("bakelse");
+        }
+        if(cbVego.isChecked()){
+            tags.add("vegetarisk");
+        }
+        if(cbRis.isChecked()){
+            tags.add("ris");
+        }
+        if(cbPotatis.isChecked()){
+            tags.add("potatis");
+        }
+        if(cbPasta.isChecked()){
+            tags.add("pasta");
+        }
+        if(cbLax.isChecked()){
+            tags.add("lax");
+        }
+        if(cbKött.isChecked()){
+            tags.add("kött");
+        }
+        if(cbKyckling.isChecked()){
+            tags.add("kyckling");
+        }
+        if(cbFrukt.isChecked()) {
+            tags.add("frukt");
+        }
+        if(cbFisk.isChecked()){
+            tags.add("fisk");
+        }
     }
 
     private void openFileChooser(){
@@ -348,6 +296,11 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
             imageUri = data.getData();
 
             Picasso.with(this).load(imageUri).resize(250, 250).onlyScaleDown().centerInside().into(recepeImage);
+            if(recepeImage.getVisibility() == View.GONE){
+                recepeImage.setVisibility(View.VISIBLE);
+                imageDeleteBtn.setVisibility(View.VISIBLE);
+
+            }
         }
     }
 
@@ -358,7 +311,51 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void uploadRecepe(String title, String desc, String inst){
+    private boolean checkInput(){
+        title = recepeTitle.getText().toString().trim();
+        desc = recepeDesc.getText().toString().trim();
+        ingr = recepeIngr.getText().toString().trim();
+        inst = recepeInst.getText().toString().trim();
+        ingrList.clear();
+        ingrList.add(ingr);
+
+        for(int i = 0; i<ingrNr; i++){
+            String ID = String.valueOf(idList.get(i));
+            rIngr = (EditText)findViewById(Integer.parseInt(ID));
+            String ingredient = rIngr.getText().toString().trim();
+            if(!ingredient.equals("")){
+                ingrList.add(ingredient);
+            }
+        }
+
+        if(title.isEmpty()){
+            recepeTitle.setError("Recepttitel behöver fyllas i");
+            recepeTitle.requestFocus();
+            return false;
+        }
+        if(desc.isEmpty()){
+            recepeDesc.setError("Specialkost behöver fyllas i");
+            recepeDesc.requestFocus();
+            return false;
+        }
+        if(ingr.isEmpty()){
+            recepeIngr = (EditText) findViewById(R.id.ingredientID);
+            recepeIngr.setError("Recepttitel behöver fyllas i");
+            recepeIngr.requestFocus();
+            return false;
+        }
+        if(inst.isEmpty()){
+            recepeInst.setError("Instruktioner behöver fyllas i");
+            recepeInst.requestFocus();
+            return false;
+        }
+
+        return true;
+
+
+    }
+
+    private void uploadRecepe(){
 
         if(imageUri != null){
             uniqueId = UUID.randomUUID().toString();
@@ -385,6 +382,8 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
         Log.d("!!!", "3");
 
+        creator = mAuth.getCurrentUser().toString();
+
         db = FirebaseFirestore.getInstance();
         receptRef = db.collection("recept");
         String image = "";
@@ -392,7 +391,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
             image = uniqueId + "." + getFileExtension(imageUri);
         }
         Log.d("!!!", "liststorlek" + String.valueOf(tags.size()) + " " + tags.toString() );
-        Recept r = new Recept(title, desc, ingrList, inst, tags, "", image);
+        Recept r = new Recept(title, desc, ingrList, inst, tags, "", image, creator);
         receptRef.add(r).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
