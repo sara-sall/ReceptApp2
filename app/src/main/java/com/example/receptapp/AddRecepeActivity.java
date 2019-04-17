@@ -382,7 +382,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
         Log.d("!!!", "3");
 
-        creator = mAuth.getCurrentUser().toString();
+        creator = mAuth.getCurrentUser().getUid();
 
         db = FirebaseFirestore.getInstance();
         receptRef = db.collection("recept");
@@ -395,8 +395,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         receptRef.add(r).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                Intent i = new Intent(AddRecepeActivity.this, MainActivity.class);
-                startActivity(i);
+                onBackPressed();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

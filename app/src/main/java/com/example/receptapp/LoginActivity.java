@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -97,11 +98,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-/*        if(Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             emailInput.setError(("Skriv in en giltig e-mailadress"));
             emailInput.requestFocus();
             return;
-        }*/
+        }
 
         if(password.isEmpty()){
             passwordInput.setError("Lösenord behöver fyllas i");

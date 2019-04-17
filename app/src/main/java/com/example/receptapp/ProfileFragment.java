@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class ProfileFragment extends Fragment implements View.OnClickListener{
     private Button logOutButton;
     private Button passwordChangeButton;
+    private Button myRecepesButton;
     private TextView userEmail;
     private TextView emailVerified;
     private FirebaseAuth mAuth;
@@ -45,6 +46,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         emailVerified = (TextView) v.findViewById(R.id.emailVerifiedID);
         passwordChangeButton = (Button) v.findViewById(R.id.passwordChangeID);
         logOutButton = (Button) v.findViewById(R.id.logOutButtonID);
+        myRecepesButton = (Button)v.findViewById(R.id.myRecepesButtonID);
 
         if(user != null){
             String email=user.getEmail();
@@ -61,6 +63,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
         passwordChangeButton.setOnClickListener(this);
         logOutButton.setOnClickListener(this);
+        myRecepesButton.setOnClickListener(this);
 
 
 
@@ -79,6 +82,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 startActivity(new Intent(v.getContext(), PasswordChangeActivity.class));
                 break;
 
+            case R.id.myRecepesButtonID:
+                startActivity(new Intent(v.getContext(), MyRecepesActivity.class));
+                break;
         }
     }
 

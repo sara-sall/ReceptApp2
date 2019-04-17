@@ -48,11 +48,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/linLay"
-        android:layout_marginTop="87dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingTop="50dp"
-        android:padding="50dp">
+        android:padding="50dp"
+        android:paddingTop="50dp">
+
+        <Button
+            android:id="@+id/myRecepesButtonID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/myRecepes" />
 
         <Button
             android:id="@+id/passwordChangeID"

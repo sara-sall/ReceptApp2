@@ -29,12 +29,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-//        View decorView = getWindow().getDecorView();
-//
-//        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-//        decorView.setSystemUiVisibility(uiOptions);
-
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigationID);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 

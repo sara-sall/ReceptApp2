@@ -43,4 +43,5 @@
     <string name="addIngredient">Ingrediens</string>
     <string name="previewRecepie">Visa receptet</string>
     <string name="createRecepe">Skapa recept</string>
+    <string name="myRecepes">Mina recept</string>
 </resources>

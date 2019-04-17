@@ -56,11 +56,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-/*        if(Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             emailInput.setError(("Skriv in en giltig e-mailadress"));
             emailInput.requestFocus();
             return;
-        }*/
+        }
 
         if(password.isEmpty()){
             passwordInput.setError("Lösenord behöver fyllas i");

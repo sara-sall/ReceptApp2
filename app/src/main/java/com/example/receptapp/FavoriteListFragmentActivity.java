@@ -115,7 +115,6 @@ public class FavoriteListFragmentActivity extends Fragment {
                     Log.w(TAG, "Listen failed.", e);
                     return;
                 }
-               // receptLista.clear();
                 Log.d("!!!clear", String.valueOf(receptLista.size()));
                 for (DocumentChange doc : value.getDocumentChanges()) {
                     switch (doc.getType()){
