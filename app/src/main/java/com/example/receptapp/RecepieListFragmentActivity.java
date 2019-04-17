@@ -161,6 +161,7 @@ public class RecepieListFragmentActivity extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Log.d("test", "onQueryTextSubmit: 1 ");
                 receptRef = db.collection("recept");
                 receptRef.whereArrayContains("tags", query).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -183,6 +184,32 @@ public class RecepieListFragmentActivity extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                Log.d("test", "onQueryTextChange: 1 ");
+
+                return false;
+            }
+
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                Log.d("test", "onClose: true");
+                receptRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        QuerySnapshot q = task.getResult();
+                        receptLista.clear();
+                        for (DocumentSnapshot d : q.getDocuments()) {
+                            Recept recept = d.toObject(Recept.class);
+                            receptLista.add(recept);
+                            recept.setRecepeID(d.getId());
+                        }
+                        Log.d("test", "receptlista " + receptLista.size());
+                        adapter.notifyDataSetChanged();
+
+                    }
+                });
                 return false;
             }
         });

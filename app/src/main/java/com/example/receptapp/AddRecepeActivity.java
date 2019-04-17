@@ -307,8 +307,11 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
                 if(cbFrukt.isChecked()) {
                     tags.add("frukt");
                 }
+                if(cbFisk.isChecked()){
+                    tags.add("fisk");
+                }
 
-                Log.d("!!!", "1");
+                Log.d("!!!", tags.toString());
 
                 uploadRecepe(title, desc, inst);
 
@@ -388,14 +391,13 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         if(imageUri != null){
             image = uniqueId + "." + getFileExtension(imageUri);
         }
-
+        Log.d("!!!", "liststorlek" + String.valueOf(tags.size()) + " " + tags.toString() );
         Recept r = new Recept(title, desc, ingrList, inst, tags, "", image);
         receptRef.add(r).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Intent i = new Intent(AddRecepeActivity.this, MainActivity.class);
                 startActivity(i);
-                Log.d("!!!", "4");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -403,6 +405,5 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
                 Toast.makeText(getApplicationContext(), "Recept kunde inte laddas upp", Toast.LENGTH_SHORT).show();
             }
         });
-        Log.d("!!!", "5");
     }
 }
