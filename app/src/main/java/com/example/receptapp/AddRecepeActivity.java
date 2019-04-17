@@ -98,7 +98,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     private Button previewBtn;
     private Button addRecepeBtn;
 
-    int ingrNr = 0;
+    private int ingrNr = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

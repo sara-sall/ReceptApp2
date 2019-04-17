@@ -83,6 +83,14 @@
 
 
         </LinearLayout>
+
+    <TextView
+        android:id="@+id/forgotPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="@string/forgottenPassword" />
     <TextView
         android:id="@+id/toSignUp"
         android:layout_width="match_parent"
@@ -90,6 +98,9 @@
         android:gravity="center_horizontal"
         android:text="@string/toSignUp"
         android:padding="10dp" />
+
+
+
     <ProgressBar
         android:id="@+id/progressbarLI"
         android:layout_width="wrap_content"

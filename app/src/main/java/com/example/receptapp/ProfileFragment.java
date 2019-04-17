@@ -16,7 +16,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -57,7 +60,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             if(emailVeri){
                 emailVerified.setText("E-mail verifierad");
             }else{
-                emailVerified.setText("E-mail inte verifierad");
+                emailVerified.setText("E-mail inte verifierad, klicka för att verifiera");
+                emailVerified.setOnClickListener(this);
             }
         }
 
@@ -71,7 +75,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
+        final View v = view;
         switch (v.getId()){
             case R.id.logOutButtonID:
                 mAuth.signOut();
@@ -85,6 +90,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             case R.id.myRecepesButtonID:
                 startActivity(new Intent(v.getContext(), MyRecepesActivity.class));
                 break;
+
+            case R.id.emailVerifiedID:
+                mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(v.getContext(), "Verifikations e-mail skickat", Toast.LENGTH_SHORT).show();
+                    }
+                });
         }
     }
 

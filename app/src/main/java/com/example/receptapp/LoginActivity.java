@@ -51,6 +51,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Button loginButton;
+    private TextView forgotPassword;
     private FirebaseAuth mAuth;
     private TextView signUp;
     private EditText emailInput, passwordInput;
@@ -78,11 +79,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         passwordInput = (EditText) findViewById(R.id.passwordLI);
         progressBar = (ProgressBar) findViewById(R.id.progressbarLI);
         loginButton = (Button) findViewById(R.id.signInButtonID);
+        forgotPassword = (TextView) findViewById(R.id.forgotPassword);
 
         mAuth = FirebaseAuth.getInstance();
 
         signUp.setOnClickListener(this);
         loginButton.setOnClickListener(this);
+        forgotPassword.setOnClickListener(this);
 
 
     }
@@ -143,6 +146,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.toSignUp:
                 startActivity(new Intent (this, SignUpActivity.class));
+                break;
+
+            case R.id.forgotPassword:
+                startActivity(new Intent(this, ForgotPasswordActivity.class));
                 break;
 
 

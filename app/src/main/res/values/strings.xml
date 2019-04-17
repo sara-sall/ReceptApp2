@@ -44,4 +44,6 @@
     <string name="previewRecepie">Visa receptet</string>
     <string name="createRecepe">Skapa recept</string>
     <string name="myRecepes">Mina recept</string>
+    <string name="forgottenPassword">Glömt lösenord</string>
+    <string name="sendPassword">Skicka lösenord</string>
 </resources>
