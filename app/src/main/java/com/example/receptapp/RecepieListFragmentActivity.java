@@ -126,9 +126,6 @@ public class RecepieListFragmentActivity extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        //itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL );
-        //recyclerView.addItemDecoration(itemDecoration);
-
         adapter = new RecepieListAdapter(receptLista);
         recyclerView.setAdapter(adapter);
 
