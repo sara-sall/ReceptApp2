@@ -90,7 +90,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 progressBar.setVisibility(View.GONE);
                 if(task.isSuccessful()){
                     mAuth.getCurrentUser().sendEmailVerification();
-                    Intent intent = new Intent (SignUpActivity.this, MainActivity.class);
+                    Toast.makeText(getApplicationContext(), "Ett verifieringsmail har skickats till din E-postadress", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent (SignUpActivity.this, LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
 

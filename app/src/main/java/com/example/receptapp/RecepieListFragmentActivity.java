@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.LogDescriptor;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -163,7 +164,7 @@ public class RecepieListFragmentActivity extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 Log.d("test", "onQueryTextSubmit: 1 ");
                 receptRef = db.collection("recept");
-                receptRef.whereArrayContains("tags", query).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                receptRef.whereArrayContains("tags", query.toLowerCase()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         QuerySnapshot q = task.getResult();
@@ -186,6 +187,22 @@ public class RecepieListFragmentActivity extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 Log.d("test", "onQueryTextChange: 1 ");
 
+
+                receptRef = db.collection("recept");
+                receptRef.whereGreaterThanOrEqualTo("title", newText.toLowerCase()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        QuerySnapshot q = task.getResult();
+                        receptLista.clear();
+                        for (DocumentSnapshot d : q.getDocuments()) {
+                            Recept recept = d.toObject(Recept.class);
+                            receptLista.add(recept);
+                            recept.setRecepeID(d.getId());
+                        }
+                        Log.d("test", "receptlista " + receptLista.size());
+                        adapter.notifyDataSetChanged();
+                    }
+                });
                 return false;
             }
 

@@ -53,12 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
                 case R.id.nav_favorites:
                     selectedFragment = favoritesFragment;
-                //    toolbar.setTitle(R.string.toolbarTitleFav);
                     break;
 
                 case R.id.nav_profile:
                     selectedFragment = profileFragment;
-                  //  toolbar.setTitle(R.string.toolbarTitleProf);
                     break;
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.container_mainID, selectedFragment).commit();
@@ -67,13 +65,5 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
-/*    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        MenuItem mSearch = menu.findItem(R.id.menuSearch);
-        SearchView mSV = (SearchView) mSearch.getActionView();
-        return super.onCreateOptionsMenu(menu);
-    }*/
 }
 

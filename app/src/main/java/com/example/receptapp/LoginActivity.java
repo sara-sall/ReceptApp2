@@ -118,6 +118,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             passwordInput.requestFocus();
             return;
         }
+
         progressBar.setVisibility(View.VISIBLE);
 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -125,9 +126,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
                 if(task.isSuccessful()){
-                    Intent intent = new Intent (LoginActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                    if(mAuth.getCurrentUser().isEmailVerified()){
+                        Intent intent = new Intent (LoginActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Du behöver verifiera din email innan du kan logga in", Toast.LENGTH_LONG).show();
+                    }
+
+
                 }
                 else{
                     Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();

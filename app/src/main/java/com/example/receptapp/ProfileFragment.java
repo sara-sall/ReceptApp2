@@ -28,7 +28,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     private Button passwordChangeButton;
     private Button myRecepesButton;
     private TextView userEmail;
-    private TextView emailVerified;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private Toolbar toolbar;
@@ -46,7 +45,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         user = mAuth.getCurrentUser();
 
         userEmail = (TextView) v.findViewById(R.id.userEmail);
-        emailVerified = (TextView) v.findViewById(R.id.emailVerifiedID);
         passwordChangeButton = (Button) v.findViewById(R.id.passwordChangeID);
         logOutButton = (Button) v.findViewById(R.id.logOutButtonID);
         myRecepesButton = (Button)v.findViewById(R.id.myRecepesButtonID);
@@ -55,14 +53,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             String email=user.getEmail();
             userEmail.setText(email);
 
-            boolean emailVeri = user.isEmailVerified();
-
-            if(emailVeri){
-                emailVerified.setText("E-mail verifierad");
-            }else{
-                emailVerified.setText("E-mail inte verifierad, klicka för att verifiera");
-                emailVerified.setOnClickListener(this);
-            }
         }
 
         passwordChangeButton.setOnClickListener(this);
@@ -80,7 +70,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         switch (v.getId()){
             case R.id.logOutButtonID:
                 mAuth.signOut();
-                startActivity(new Intent(v.getContext(), LoginActivity.class));
+                Intent intent = new Intent(v.getContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
                 break;
 
             case R.id.passwordChangeID:
@@ -91,13 +84,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 startActivity(new Intent(v.getContext(), MyRecepesActivity.class));
                 break;
 
-            case R.id.emailVerifiedID:
-                mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(v.getContext(), "Verifikations e-mail skickat", Toast.LENGTH_SHORT).show();
-                    }
-                });
         }
     }
 
