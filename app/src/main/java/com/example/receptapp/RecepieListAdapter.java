@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +53,8 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
         public TextView textView2;
         public ImageView imageView;
         public ImageView favoriteButton;
-        public CardView main;
+       // public CardView main;
+        private LinearLayout main;
         public String recepieID;
         private boolean isFavorite;
         private ArrayList<String> favoriteList;
@@ -180,7 +182,7 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
             sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Picasso.with(context).load(uri).resize(150, 95).onlyScaleDown().centerCrop().into(vh.imageView);
+                    Picasso.with(context).load(uri).resize(150, 110).onlyScaleDown().centerCrop().into(vh.imageView);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
