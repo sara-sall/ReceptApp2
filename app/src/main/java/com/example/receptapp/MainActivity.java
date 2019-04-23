@@ -36,9 +36,11 @@ public class MainActivity extends AppCompatActivity {
         favoritesFragment = new FavoriteListFragmentActivity();
         profileFragment = new ProfileFragment();
 
-        getSupportFragmentManager().beginTransaction().add(R.id.container_mainID, recepieListFragment).commit();
 
+        if(savedInstanceState == null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_mainID, recepieListFragment).commit();
 
+        }
 
     }
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
