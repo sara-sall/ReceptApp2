@@ -67,6 +67,12 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     private CheckBox cbRis;
     private CheckBox cbBakelse;
     private CheckBox cbFrukt;
+    private CheckBox cbBeef;
+    private CheckBox cbPork;
+    private CheckBox cbGlutenf;
+    private CheckBox cbLaktosf;
+    private CheckBox cbVegan;
+
 
     private LinearLayout tagsBtn;
     private TableLayout tagsLay;
@@ -147,6 +153,11 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         cbPotatis = (CheckBox) findViewById(R.id.cbPotatis);
         cbRis = (CheckBox) findViewById(R.id.cbRis);
         cbVego = (CheckBox) findViewById(R.id.cbVegetarisk);
+        cbBeef = (CheckBox) findViewById(R.id.cbBeef);
+        cbPork = (CheckBox) findViewById(R.id.cbPork);
+        cbLaktosf = (CheckBox) findViewById(R.id.cbLaktosfri);
+        cbGlutenf = (CheckBox) findViewById(R.id.cbGlutenfri);
+        cbVegan = (CheckBox) findViewById(R.id.cbVeganskt);
 
         tagsBtn = (LinearLayout) findViewById(R.id.tagsButtonLayout);
         tagsBtn.setOnClickListener(this);
@@ -278,6 +289,23 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         }
         if(cbFisk.isChecked()){
             tags.add("fisk");
+        }
+
+        if(cbVegan.isChecked()){
+            tags.add("vegansk");
+        }
+
+        if(cbBeef.isChecked()){
+            tags.add("nöt");
+        }
+        if(cbPork.isChecked()){
+            tags.add("fläsk");
+        }
+        if(cbGlutenf.isChecked()){
+            tags.add("glutenfri");
+        }
+        if(cbLaktosf.isChecked()){
+            tags.add("laktosfri");
         }
     }
 

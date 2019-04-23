@@ -267,6 +267,14 @@
                             android:text="Pasta"
                             android:textColor="@color/colorPrimary"/>
 
+                        <CheckBox
+                            android:id="@+id/cbGlutenfri"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Glutenfri"
+                            android:textColor="@color/colorPrimary"/>
+
                     </TableRow>
                     <TableRow
                         android:layout_width="match_parent"
@@ -286,6 +294,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Potatis"
+                            android:textColor="@color/colorPrimary"/>
+
+                        <CheckBox
+                            android:id="@+id/cbLaktosfri"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Laktosfri"
                             android:textColor="@color/colorPrimary"/>
                     </TableRow>
                     <TableRow
@@ -307,6 +323,14 @@
                             android:layout_weight="1"
                             android:text="Ris"
                             android:textColor="@color/colorPrimary"/>
+
+                        <CheckBox
+                            android:id="@+id/cbBeef"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Nötkött"
+                            android:textColor="@color/colorPrimary"/>
                     </TableRow>
                     <TableRow
                         android:layout_width="match_parent"
@@ -327,6 +351,14 @@
                             android:layout_weight="1"
                             android:text="Bakelse"
                             android:textColor="@color/colorPrimary"/>
+
+                        <CheckBox
+                            android:id="@+id/cbPork"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Fläskkött"
+                            android:textColor="@color/colorPrimary"/>
                     </TableRow>
                     <TableRow
                         android:layout_width="match_parent"
@@ -346,6 +378,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Frukt"
+                            android:textColor="@color/colorPrimary"/>
+
+                        <CheckBox
+                            android:id="@+id/cbVeganskt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Veganskt"
                             android:textColor="@color/colorPrimary"/>
                     </TableRow>
 
