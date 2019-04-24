@@ -1,13 +1,17 @@
 package com.example.receptapp;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -104,6 +108,8 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     private Button previewBtn;
     private Button addRecepeBtn;
 
+    private static final int MY_PERMISSOPNS_REQUEST_READ_EXTERNAL_STORAGE =123;
+
     private int ingrNr = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +186,12 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
         switch (v.getId()){
             case R.id.addImageLayout:
-                openFileChooser();
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSOPNS_REQUEST_READ_EXTERNAL_STORAGE);
+                }
+                else{
+                    openFileChooser();
+                }
                 break;
 
             case R.id.imageDeleteButton:
@@ -431,5 +442,18 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
                 Toast.makeText(getApplicationContext(), "Recept kunde inte laddas upp", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case MY_PERMISSOPNS_REQUEST_READ_EXTERNAL_STORAGE:
+                if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    openFileChooser();
+                }else{
+                    addImageBtn.setVisibility(View.GONE);
+                }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
