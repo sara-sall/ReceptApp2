@@ -84,6 +84,7 @@ public class FavoriteListFragmentActivity extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), AddRecepeActivity.class);
+                intent.putExtra("isfav", true);
                 v.getContext().startActivity(intent);
             }
         });

@@ -34,7 +34,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -42,6 +45,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class AddRecepeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -99,6 +103,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
     private FirebaseFirestore db;
     private CollectionReference receptRef;
+    private CollectionReference favoriteRef;
 
     private StorageReference imageStorageRef;
     private StorageReference fileReference;
@@ -107,6 +112,8 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
     private Button previewBtn;
     private Button addRecepeBtn;
+
+    private Boolean isFav;
 
     private static final int MY_PERMISSOPNS_REQUEST_READ_EXTERNAL_STORAGE =123;
 
@@ -121,6 +128,16 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         this.setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        Bundle b = getIntent().getExtras();
+
+        if(b != null){
+            if(b.getBoolean("isfav") == true){
+                isFav = true;
+            }else{
+                isFav = false;
+            }
+        }
 
         progressBar = (ProgressBar) findViewById(R.id.progressbarAR);
 
@@ -434,6 +451,26 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         receptRef.add(r).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
+                if(isFav){
+                    favoriteRef = FirebaseFirestore.getInstance().collection("users").document(creator).collection("favorites");
+                    Query q = receptRef.whereEqualTo("title", title).whereEqualTo("creator", creator);
+
+                    q.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot q = task.getResult();
+                                for(DocumentSnapshot d:q.getDocuments()){
+                                    String recepieID = d.getId();
+                                    HashMap<String, String> data = new HashMap<>();
+                                    data.put("recepeID", recepieID);
+                                    favoriteRef.document(recepieID).set(data);
+                                }
+                            }
+
+                        }
+                    });
+                }
                 onBackPressed();
             }
         }).addOnFailureListener(new OnFailureListener() {
