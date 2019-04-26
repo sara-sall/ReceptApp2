@@ -33,6 +33,7 @@ import com.google.api.LogDescriptor;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -128,21 +129,55 @@ public class RecepieListFragmentActivity extends Fragment {
         adapter = new RecepieListAdapter(receptLista);
         recyclerView.setAdapter(adapter);
 
-        receptRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                QuerySnapshot q = task.getResult();
-                receptLista.clear();
-                for (DocumentSnapshot d : q.getDocuments()) {
-                    Recept recept = d.toObject(Recept.class);
-                    receptLista.add(recept);
-                    recept.setRecepeID(d.getId());
-                }
-                Log.d("test", "receptlista " + receptLista.size());
-                adapter.notifyDataSetChanged();
 
+        receptRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable QuerySnapshot value, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+
+                for (DocumentChange doc : value.getDocumentChanges()) {
+                    switch (doc.getType()){
+                        case ADDED:
+                            receptRef.document(doc.getDocument().getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot d = task.getResult();
+                                        if (d.exists()) {
+                                            Recept recept = d.toObject(Recept.class);
+                                            receptLista.add(recept);
+                                            recept.setRecepeID(d.getId());
+                                        }
+                                    }
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+                            break;
+                        case REMOVED:
+                            Recept r = null;
+                            for(Recept recept: receptLista){
+                                if(recept.getRecepeID().equals(doc.getDocument().getId())){
+                                    r = recept;
+                                }
+                            }
+
+                            if (r != null){
+                                receptLista.remove(r);
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            break;
+                    }
+
+
+
+                }
             }
         });
+
 
 
         return v;
