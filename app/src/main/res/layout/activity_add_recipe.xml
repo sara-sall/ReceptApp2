@@ -349,7 +349,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Bakelse"
+                            android:text="Fika"
                             android:textColor="@color/colorPrimary"/>
 
                         <CheckBox
@@ -386,6 +386,35 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Veganskt"
+                            android:textColor="@color/colorPrimary"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                        <CheckBox
+                            android:id="@+id/cbFrukost"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Frukost"
+                            android:textColor="@color/colorPrimary"/>
+
+                        <CheckBox
+                            android:id="@+id/cbLunch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Lunch"
+                            android:textColor="@color/colorPrimary"/>
+
+                        <CheckBox
+                            android:id="@+id/cbMiddag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Middag"
                             android:textColor="@color/colorPrimary"/>
                     </TableRow>
 

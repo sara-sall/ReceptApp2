@@ -62,7 +62,7 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
 
     private EditText recipeTitle, recipeDesc, recipeIngr, recipeInst;
 
-    private CheckBox cbKött, cbKyckling, cbFisk, cbLax, cbVego, cbPasta, cbPotatis, cbRis, cbBakelse, cbFrukt, cbBeef, cbPork, cbGlutenf, cbLaktosf, cbVegan;
+    private CheckBox cbKött, cbKyckling, cbFisk, cbLax, cbVego, cbPasta, cbPotatis, cbRis, cbBakelse, cbFrukt, cbBeef, cbPork, cbGlutenf, cbLaktosf, cbVegan, cbFrukost, cbLunch, cbMiddag;
 
     private LinearLayout tagsBtn;
     private TableLayout tagsLay;
@@ -161,6 +161,9 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
         cbLaktosf = (CheckBox) findViewById(R.id.cbLaktosfri);
         cbGlutenf = (CheckBox) findViewById(R.id.cbGlutenfri);
         cbVegan = (CheckBox) findViewById(R.id.cbVeganskt);
+        cbFrukost = (CheckBox) findViewById(R.id.cbFrukost);
+        cbLunch = (CheckBox) findViewById(R.id.cbLunch);
+        cbMiddag = (CheckBox) findViewById(R.id.cbMiddag);
 
         tagsBtn = (LinearLayout) findViewById(R.id.tagsButtonLayout);
         tagsBtn.setOnClickListener(this);
@@ -360,7 +363,7 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
 
     private void checkTags(){
         if(cbBakelse.isChecked()){
-            tags.add("bakelse");
+            tags.add("fika");
         }
         if(cbVego.isChecked()){
             tags.add("vegetarisk");
@@ -405,6 +408,15 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
         }
         if(cbLaktosf.isChecked()){
             tags.add("laktosfri");
+        }
+        if(cbFrukost.isChecked()){
+            tags.add("frukost");
+        }
+        if(cbLunch.isChecked()){
+            tags.add("lunch");
+        }
+        if(cbMiddag.isChecked()){
+            tags.add("middag");
         }
     }
 

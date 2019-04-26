@@ -11,26 +11,31 @@
         android:id="@+id/toolbarID"
         layout="@layout/toolbar" />
 
+    <ScrollView
+        android:id="@+id/scrollV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?actionBarSize">
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewID"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
 
         />
-
+        </ScrollView>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:layout_alignBottom="@id/recyclerViewID"
-        android:layout_alignRight="@id/recyclerViewID"
+        android:layout_alignBottom="@id/scrollV"
+        android:layout_alignRight="@id/scrollV"
         android:src="@drawable/ic_add_white_24dp"
-        app:layout_anchor="@id/recyclerViewID"
+        app:layout_anchor="@id/scrollV"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_add_white_24dp"/>
 
