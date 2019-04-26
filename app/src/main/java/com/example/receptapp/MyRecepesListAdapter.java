@@ -65,6 +65,8 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
         private CollectionReference favoriteRef;
         private CollectionReference recepeRef;
 
+        private StorageReference imageRef;
+
         public Context mContext;
 
 
@@ -80,6 +82,7 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
             db = FirebaseFirestore.getInstance();
             favoriteRef = FirebaseFirestore.getInstance().collection("users").document(user).collection("favorites");
             recepeRef = FirebaseFirestore.getInstance().collection("recept");
+
 
 
             favoriteList = new ArrayList<String>();
@@ -149,10 +152,13 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
             }
 
             if(v.getId()==R.id.imageDeleteButtonID){
+                imageRef = FirebaseStorage.getInstance().getReference().child(recepieItem.getImageLink());
                 recepeRef.document(recepieID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        imageRef.delete();
                         Toast.makeText(imageView.getContext(), "Recept Borttaget", Toast.LENGTH_SHORT  ).show();
+
                     }
                 });
 
