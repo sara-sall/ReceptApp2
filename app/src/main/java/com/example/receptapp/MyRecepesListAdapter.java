@@ -48,15 +48,13 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
     private Context context;
 
     public static class RecepieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView textView;
-        public TextView textView2;
-        public ImageView imageView;
-        public ImageView favoriteButton;
-        public ImageView deleteButton;
-        public CardView main;
-        public String recepieID;
-        private boolean isFavorite;
-        private ArrayList<String> favoriteList;
+        private TextView textView;
+
+        private ImageView imageView;
+        private ImageView favoriteButton;
+        private ImageView deleteButton;
+        private CardView main;
+        private String recepieID;
 
         private FirebaseAuth mAuth;
         public String user;
@@ -67,8 +65,7 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
 
         private StorageReference imageRef;
 
-        public Context mContext;
-
+        private boolean haveImage;
 
 
         public RecepieViewHolder(@NonNull View itemView) {
@@ -77,15 +74,12 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
 
             itemView.setOnClickListener(this);
             mAuth = FirebaseAuth.getInstance();
-            user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            user = mAuth.getCurrentUser().getUid();
 
             db = FirebaseFirestore.getInstance();
-            favoriteRef = FirebaseFirestore.getInstance().collection("users").document(user).collection("favorites");
-            recepeRef = FirebaseFirestore.getInstance().collection("recept");
+            favoriteRef = db.collection("users").document(user).collection("favorites");
+            recepeRef = db.collection("recept");
 
-
-
-            favoriteList = new ArrayList<String>();
 
             textView = itemView.findViewById(R.id.recepieSquareTitle);
             imageView = itemView.findViewById(R.id.recepieSquareImage);
@@ -96,8 +90,6 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
             main.setOnClickListener(this);
             favoriteButton.setOnClickListener(this);
             deleteButton.setOnClickListener(this);
-
-            mContext = itemView.getContext();
 
 
         }
@@ -152,11 +144,17 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
             }
 
             if(v.getId()==R.id.imageDeleteButtonID){
-                imageRef = FirebaseStorage.getInstance().getReference().child(recepieItem.getImageLink());
+               haveImage = false;
+                if(recepieItem.getImageLink() != null && !recepieItem.getImageLink().isEmpty()){
+                    imageRef = FirebaseStorage.getInstance().getReference().child(recepieItem.getImageLink());
+                    haveImage = true;
+                }
                 recepeRef.document(recepieID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        imageRef.delete();
+                        if(haveImage){
+                            imageRef.delete();
+                        }
                         Toast.makeText(imageView.getContext(), "Recept Borttaget", Toast.LENGTH_SHORT  ).show();
 
                     }
@@ -170,8 +168,6 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
 
     public MyRecepesListAdapter(List<Recept> recepieList) {
         this.recepieList = recepieList;
-
-
     }
 
 

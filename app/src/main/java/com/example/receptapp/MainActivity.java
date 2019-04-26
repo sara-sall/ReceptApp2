@@ -16,18 +16,15 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    FragmentManager manager;
     Fragment recepieListFragment;
     Fragment favoritesFragment;
     Fragment profileFragment;
-    Toolbar toolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigationID);
         bottomNav.setOnNavigationItemSelectedListener(navListener);

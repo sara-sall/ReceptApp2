@@ -3,6 +3,7 @@ package com.example.receptapp;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -59,7 +60,6 @@ public class RecepieListFragmentActivity extends Fragment {
 
     private FirebaseFirestore db;
     private CollectionReference receptRef;
-
 
     private ArrayList<String> ingredients;
     private ArrayList<String> tags;
@@ -183,9 +183,7 @@ public class RecepieListFragmentActivity extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 Log.d("test", "onQueryTextChange: 1 ");
-
-
-                receptRef = db.collection("recept");
+/*
                 receptRef.whereGreaterThanOrEqualTo("title", newText.toLowerCase()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -199,7 +197,8 @@ public class RecepieListFragmentActivity extends Fragment {
                         Log.d("test", "receptlista " + receptLista.size());
                         adapter.notifyDataSetChanged();
                     }
-                });
+                });*/
+
                 return false;
             }
 

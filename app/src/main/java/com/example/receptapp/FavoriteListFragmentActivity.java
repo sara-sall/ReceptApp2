@@ -47,9 +47,7 @@ public class FavoriteListFragmentActivity extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecepieListAdapter adapterF;
-    private DividerItemDecoration itemDecoration;
     private Toolbar toolbar;
-    private ImageView favoriteButton;
     private ArrayList<Recept> receptLista;
     private ArrayList<String> favoritLista;
 
@@ -61,10 +59,6 @@ public class FavoriteListFragmentActivity extends Fragment {
 
     private FirebaseAuth mAuth;
     public String user;
-
-
-    private ArrayList<String> ingredients;
-    private ArrayList<String> tags;
 
     @Nullable
     @Override
@@ -90,7 +84,7 @@ public class FavoriteListFragmentActivity extends Fragment {
         });
 
         mAuth = FirebaseAuth.getInstance();
-        user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        user = mAuth.getCurrentUser().getUid();
 
         db = FirebaseFirestore.getInstance();
         receptRef = db.collection("recept");
@@ -116,7 +110,7 @@ public class FavoriteListFragmentActivity extends Fragment {
                     Log.w(TAG, "Listen failed.", e);
                     return;
                 }
-                Log.d("!!!clear", String.valueOf(receptLista.size()));
+
                 for (DocumentChange doc : value.getDocumentChanges()) {
                     switch (doc.getType()){
                         case ADDED:
@@ -129,7 +123,6 @@ public class FavoriteListFragmentActivity extends Fragment {
                                             Recept recept = d.toObject(Recept.class);
                                             receptLista.add(recept);
                                             recept.setRecepeID(d.getId());
-                                            Log.d("!!!", String.valueOf(receptLista.size()));
                                         }
                                     }
                                     adapterF.notifyDataSetChanged();

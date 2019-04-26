@@ -61,26 +61,9 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     private Uri imageUri;
     private String uniqueId;
 
-    private EditText recepeTitle;
-    private EditText recepeDesc;
-    private EditText recepeIngr;
-    private EditText recepeInst;
-    private CheckBox cbKött;
-    private CheckBox cbKyckling;
-    private CheckBox cbFisk;
-    private CheckBox cbLax;
-    private CheckBox cbVego;
-    private CheckBox cbPasta;
-    private CheckBox cbPotatis;
-    private CheckBox cbRis;
-    private CheckBox cbBakelse;
-    private CheckBox cbFrukt;
-    private CheckBox cbBeef;
-    private CheckBox cbPork;
-    private CheckBox cbGlutenf;
-    private CheckBox cbLaktosf;
-    private CheckBox cbVegan;
+    private EditText recepeTitle,recepeDesc, recepeIngr, recepeInst;
 
+    private CheckBox cbKött, cbKyckling, cbFisk, cbLax, cbVego, cbPasta, cbPotatis, cbRis, cbBakelse, cbFrukt, cbBeef, cbPork, cbGlutenf, cbLaktosf, cbVegan;
 
     private LinearLayout tagsBtn;
     private TableLayout tagsLay;
@@ -92,10 +75,8 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
     private EditText rIngr;
 
-    private String title;
-    private String desc;
-    private String ingr;
-    private String inst;
+    private String title, desc, ingr, inst;
+
 
     private ArrayList idList;
     private ArrayList ingrList;
@@ -113,7 +94,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     private Button previewBtn;
     private Button addRecepeBtn;
 
-    private Boolean isFav;
+    private Boolean isFav =false;
 
     private static final int MY_PERMISSOPNS_REQUEST_READ_EXTERNAL_STORAGE =123;
 
@@ -134,8 +115,6 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         if(b != null){
             if(b.getBoolean("isfav") == true){
                 isFav = true;
-            }else{
-                isFav = false;
             }
         }
 
@@ -408,7 +387,6 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
         return true;
 
-
     }
 
     private void uploadRecepe(){
@@ -436,8 +414,6 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
             });
         }
 
-        Log.d("!!!", "3");
-
         creator = mAuth.getCurrentUser().getUid();
 
         db = FirebaseFirestore.getInstance();
@@ -446,7 +422,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         if(imageUri != null){
             image = uniqueId + "." + getFileExtension(imageUri);
         }
-        Log.d("!!!", "liststorlek" + String.valueOf(tags.size()) + " " + tags.toString() );
+
         Recept r = new Recept(title, desc, ingrList, inst, tags, "", image, creator);
         receptRef.add(r).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override

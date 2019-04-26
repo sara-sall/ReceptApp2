@@ -62,12 +62,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
          user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null && user.isEmailVerified()) {
-            // User is signed in
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
         } else {
-            // User is signed out
             Log.d("!!!", "onAuthStateChanged:signed_out");
         }
 

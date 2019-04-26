@@ -41,8 +41,7 @@ public class MyRecepesActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private MyRecepesListAdapter adapter;
     private Toolbar toolbar;
-    private DividerItemDecoration itemDecoration;
-    private ImageView favoriteButton;
+
     private ArrayList<Recept> receptLista;
 
     private FloatingActionButton fab;
@@ -53,10 +52,6 @@ public class MyRecepesActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private String creator;
-
-
-    private ArrayList<String> ingredients;
-    private ArrayList<String> tags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,9 +117,7 @@ public class MyRecepesActivity extends AppCompatActivity {
                                         receptLista.add(recept);
                                         recept.setRecepeID(d.getId());
                                     }
-                                    Log.d("test", "receptlista " + receptLista.size());
                                     adapter.notifyDataSetChanged();
-
                                 }
                             });
                             break;
@@ -150,7 +143,6 @@ public class MyRecepesActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     @Override

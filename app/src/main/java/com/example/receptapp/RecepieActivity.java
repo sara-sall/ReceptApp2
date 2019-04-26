@@ -39,12 +39,10 @@ import java.util.List;
 
 public class RecepieActivity extends AppCompatActivity {
 
-    private TextView descText;
-    private TextView instText;
-    private TextView ingrList;
-    boolean isFavorite;
-    Toolbar toolbar;
-    ImageView rImage;
+    private TextView descText, instText, ingrList;
+    private boolean isFavorite;
+    private Toolbar toolbar;
+    private ImageView rImage;
     private String recepeID;
     private Recept recept;
     private Context context;
@@ -59,7 +57,7 @@ public class RecepieActivity extends AppCompatActivity {
     private CollectionReference favoriteRef;
 
     private FirebaseAuth mAuth;
-    public String user;
+    private String user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +68,9 @@ public class RecepieActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        user = mAuth.getCurrentUser().getUid();
 
-        favoriteRef = FirebaseFirestore.getInstance().collection("users").document(user).collection("favorites");
+        favoriteRef = db.getInstance().collection("users").document(user).collection("favorites");
 
         descText = (TextView) findViewById(R.id.recepieADescID);
         toolbar = (Toolbar) findViewById(R.id.rToolbar);
@@ -84,8 +82,7 @@ public class RecepieActivity extends AppCompatActivity {
 
         imageUrl = "";
 
-        Bundle b = new Bundle();
-        b = getIntent().getExtras();
+        Bundle b = getIntent().getExtras();
 
         if(b != null){
             recepeID = (String) b.get("recepeID");
@@ -152,7 +149,6 @@ public class RecepieActivity extends AppCompatActivity {
                     if(document.exists()){
                         recept = document.toObject(Recept.class);
                         descText.setText(recept.getDescription());
-                       // rImage.setImageResource(recept.getImage());
                         toolbar.setTitle(recept.getTitle());
                         instText.setText(recept.getInstructions());
                         imageUrl = recept.getImageLink();

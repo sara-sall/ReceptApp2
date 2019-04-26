@@ -42,24 +42,16 @@ public class RecepePreviewActivity extends AppCompatActivity {
     private TextView descText;
     private TextView instText;
     private TextView ingrList;
-    boolean isFavorite = true;
-    Toolbar toolbar;
-    ImageView rImage;
+    private boolean isFavorite = true;
+    private Toolbar toolbar;
+    private ImageView rImage;
     private Uri imageUri;
     private String recepeTitle;
     private String recepeDescription;
     private String recepeInstructions;
     private ArrayList ingridientList;
-    private Context context;
 
     private FloatingActionButton fab;
-
-    private FirebaseFirestore db;
-    private DocumentReference receptRef;
-    private CollectionReference favoriteRef;
-
-    private FirebaseAuth mAuth;
-    public String user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +64,10 @@ public class RecepePreviewActivity extends AppCompatActivity {
         ingrList = (TextView) findViewById(R.id.ingredientsID);
         instText = (TextView) findViewById(R.id.instructionsID);
         toolbar.setTitle("");
-        context = getApplicationContext();
 
         ingridientList = new ArrayList<String>();
 
-        Bundle b = new Bundle();
-        b = getIntent().getExtras();
+        Bundle b = getIntent().getExtras();
 
         if(b != null){
             recepeTitle = (String) b.get("title");
@@ -90,7 +80,6 @@ public class RecepePreviewActivity extends AppCompatActivity {
             }
 
             descText.setText(recepeDescription);
-            // rImage.setImageResource(recept.getImage());
             toolbar.setTitle(recepeTitle);
             instText.setText(recepeInstructions);
 

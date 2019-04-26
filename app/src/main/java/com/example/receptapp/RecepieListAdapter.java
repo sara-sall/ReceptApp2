@@ -49,24 +49,18 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
     private Context context;
 
     public static class RecepieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView textView;
-        public TextView textView2;
-        public ImageView imageView;
-        public ImageView favoriteButton;
-       // public CardView main;
+        private TextView textView;
+        private TextView textView2;
+        private ImageView imageView;
+        private ImageView favoriteButton;
         private LinearLayout main;
-        public String recepieID;
-        private boolean isFavorite;
-        private ArrayList<String> favoriteList;
+        private String recepieID;
 
         private FirebaseAuth mAuth;
-        public String user;
+        private String user;
 
         private FirebaseFirestore db;
         private CollectionReference favoriteRef;
-
-        public Context mContext;
-
 
 
         public RecepieViewHolder(@NonNull View itemView) {
@@ -75,12 +69,10 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
 
             itemView.setOnClickListener(this);
             mAuth = FirebaseAuth.getInstance();
-            user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            user = mAuth.getCurrentUser().getUid();
 
             db = FirebaseFirestore.getInstance();
-            favoriteRef = FirebaseFirestore.getInstance().collection("users").document(user).collection("favorites");
-
-            favoriteList = new ArrayList<String>();
+            favoriteRef = db.collection("users").document(user).collection("favorites");
 
             textView = itemView.findViewById(R.id.recepieSquareTitle);
             textView2 = itemView.findViewById(R.id.recepieSquareDesc);
@@ -90,9 +82,6 @@ public class RecepieListAdapter extends RecyclerView.Adapter {
 
             main.setOnClickListener(this);
             favoriteButton.setOnClickListener(this);
-
-
-            mContext = itemView.getContext();
 
 
         }
