@@ -16,14 +16,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".MyRecepesActivity" />
-        <activity android:name=".RecepePreviewActivity" />
-        <activity android:name=".AddRecepeActivity" />
+        <activity android:name=".MyRecipesActivity" />
+        <activity android:name=".RecipePreviewActivity" />
+        <activity android:name=".AddRecipeActivity" />
         <activity android:name=".PasswordChangeActivity" />
         <activity android:name=".SignUpActivity" />
         <activity
-            android:name=".RecepieActivity"
-            android:label="@string/title_activity_recepie"
+            android:name=".RecipeActivity"
+            android:label="@string/title_activity_recipe"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"

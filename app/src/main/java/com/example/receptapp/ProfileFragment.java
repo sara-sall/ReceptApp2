@@ -8,25 +8,18 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener{
     private Button logOutButton;
     private Button passwordChangeButton;
-    private Button myRecepesButton;
+    private Button myRecipesButton;
     private TextView userEmail;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -47,7 +40,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         userEmail = (TextView) v.findViewById(R.id.userEmail);
         passwordChangeButton = (Button) v.findViewById(R.id.passwordChangeID);
         logOutButton = (Button) v.findViewById(R.id.logOutButtonID);
-        myRecepesButton = (Button)v.findViewById(R.id.myRecepesButtonID);
+        myRecipesButton = (Button)v.findViewById(R.id.myRecepesButtonID);
 
         if(user != null){
             String email=user.getEmail();
@@ -57,7 +50,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
         passwordChangeButton.setOnClickListener(this);
         logOutButton.setOnClickListener(this);
-        myRecepesButton.setOnClickListener(this);
+        myRecipesButton.setOnClickListener(this);
 
 
 
@@ -81,7 +74,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 break;
 
             case R.id.myRecepesButtonID:
-                startActivity(new Intent(v.getContext(), MyRecepesActivity.class));
+                startActivity(new Intent(v.getContext(), MyRecipesActivity.class));
                 break;
 
         }

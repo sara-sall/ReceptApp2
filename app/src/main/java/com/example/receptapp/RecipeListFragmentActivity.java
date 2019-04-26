@@ -1,16 +1,12 @@
 package com.example.receptapp;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,37 +17,29 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SearchView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.api.LogDescriptor;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
 import static android.support.constraint.Constraints.TAG;
 
-public class RecepieListFragmentActivity extends Fragment {
+public class RecipeListFragmentActivity extends Fragment {
 
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private RecepieListAdapter adapter;
+    private RecipeListAdapter adapter;
     private Toolbar toolbar;
 
     private ArrayList<Recept> receptLista;
@@ -76,14 +64,14 @@ public class RecepieListFragmentActivity extends Fragment {
 
         toolbar = (Toolbar) v.findViewById(R.id.toolbarID);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.toolbarTitleRecepe);
+        toolbar.setTitle(R.string.toolbarTitleRecipe);
         setHasOptionsMenu(true);
 
         fab = v.findViewById(R.id.fabAdd);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), AddRecepeActivity.class);
+                Intent intent = new Intent(v.getContext(), AddRecipeActivity.class);
                 v.getContext().startActivity(intent);
             }
         });
@@ -126,7 +114,7 @@ public class RecepieListFragmentActivity extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new RecepieListAdapter(receptLista);
+        adapter = new RecipeListAdapter(receptLista);
         recyclerView.setAdapter(adapter);
 
 

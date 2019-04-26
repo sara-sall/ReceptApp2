@@ -12,26 +12,26 @@ public class Recept {
     String instructions;
     ArrayList<String>tags;
     String imageLink;
-    String recepeID;
+    String recipeID;
     String creator;
 
     public Recept(){};
 
     public String getRecepeID() {
-        return recepeID;
+        return recipeID;
     }
 
-    public void setRecepeID(String recepeID) {
-        this.recepeID = recepeID;
+    public void setRecepeID(String recipeID) {
+        this.recipeID = recipeID;
     }
 
-    public Recept(String title, String description, ArrayList ingredients, String instructions, ArrayList tags, String recepeID, String imageLink, String creator) {
+    public Recept(String title, String description, ArrayList ingredients, String instructions, ArrayList tags, String recipeID, String imageLink, String creator) {
         this.title = title;
         this.description = description;
         this.ingredients = ingredients;
         this.instructions = instructions;
         this.tags = tags;
-        this.recepeID = recepeID;
+        this.recipeID = recipeID;
         this.imageLink = imageLink;
         this.creator = creator;
     }

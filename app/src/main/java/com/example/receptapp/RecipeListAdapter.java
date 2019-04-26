@@ -1,21 +1,15 @@
 package com.example.receptapp;
 
-import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,48 +19,34 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static android.support.constraint.Constraints.TAG;
-
-public class MyRecepesListAdapter extends RecyclerView.Adapter {
+public class RecipeListAdapter extends RecyclerView.Adapter {
 
     private static List<Recept> recepieList;
     private Context context;
 
     public static class RecepieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView textView;
-
+        private TextView textView2;
         private ImageView imageView;
         private ImageView favoriteButton;
-        private ImageView deleteButton;
-        private CardView main;
-        private String recepieID;
-        private TextView editRecepe;
+        private LinearLayout main;
+        private String recipeID;
 
         private FirebaseAuth mAuth;
-        public String user;
+        private String user;
 
         private FirebaseFirestore db;
         private CollectionReference favoriteRef;
-        private CollectionReference recepeRef;
-
-        private StorageReference imageRef;
-
-        private boolean haveImage;
 
 
         public RecepieViewHolder(@NonNull View itemView) {
@@ -79,19 +59,15 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
 
             db = FirebaseFirestore.getInstance();
             favoriteRef = db.collection("users").document(user).collection("favorites");
-            recepeRef = db.collection("recept");
 
-            editRecepe = itemView.findViewById(R.id.editRecepe);
             textView = itemView.findViewById(R.id.recepieSquareTitle);
+            textView2 = itemView.findViewById(R.id.recepieSquareDesc);
             imageView = itemView.findViewById(R.id.recepieSquareImage);
             favoriteButton = itemView.findViewById(R.id.favoriteButtonID);
-            deleteButton = itemView.findViewById(R.id.imageDeleteButtonID);
             main = itemView.findViewById(R.id.recepieSquareMain);
 
             main.setOnClickListener(this);
             favoriteButton.setOnClickListener(this);
-            deleteButton.setOnClickListener(this);
-            editRecepe.setOnClickListener(this);
 
 
         }
@@ -101,18 +77,12 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
             int position = getAdapterPosition();
 
             final Recept recepieItem = recepieList.get(position);
-            recepieID = recepieItem.getRecepeID();
+            recipeID = recepieItem.getRecepeID();
             if (v.getId() == R.id.recepieSquareMain) {
-                Intent intent = new Intent(v.getContext(), RecepieActivity.class);
-                intent.putExtra("recepeID", recepieID);
+                Intent intent = new Intent(v.getContext(), RecipeActivity.class);
+                intent.putExtra("recepeID", recipeID);
                 v.getContext().startActivity(intent);
 
-            }
-
-            if(v.getId()==R.id.editRecepe){
-                Intent intent = new Intent(v.getContext(), AddRecepeActivity.class);
-                intent.putExtra("recepeID", recepieID);
-                v.getContext().startActivity(intent);
             }
 
             if (v.getId() == R.id.favoriteButtonID) {
@@ -127,8 +97,8 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.getResult().isEmpty()) {
                             HashMap<String, String> data = new HashMap<>();
-                            data.put("recepeID", recepieID);
-                            favoriteRef.document(recepieID).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            data.put("recepeID", recipeID);
+                            favoriteRef.document(recipeID).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     favoriteButton.setImageResource(R.drawable.ic_favorite_color_24dp);
@@ -137,7 +107,7 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
                                 }
                             });
                         } else {
-                            favoriteRef.document(recepieID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            favoriteRef.document(recipeID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(view.getContext(), R.string.removeFavorite, Toast.LENGTH_LONG).show();
@@ -151,38 +121,21 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
 
             }
 
-            if(v.getId()==R.id.imageDeleteButtonID){
-               haveImage = false;
-                if(recepieItem.getImageLink() != null && !recepieItem.getImageLink().isEmpty()){
-                    imageRef = FirebaseStorage.getInstance().getReference().child(recepieItem.getImageLink());
-                    haveImage = true;
-                }
-                recepeRef.document(recepieID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        if(haveImage){
-                            imageRef.delete();
-                        }
-                        Toast.makeText(imageView.getContext(), "Recept Borttaget", Toast.LENGTH_SHORT  ).show();
-
-                    }
-                });
-
-            }
-
 
         }
     }
 
-    public MyRecepesListAdapter(List<Recept> recepieList) {
+    public RecipeListAdapter(List<Recept> recepieList) {
         this.recepieList = recepieList;
+
+
     }
 
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = (View) LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.my_recepie_square, viewGroup, false);
+        View view = (View) LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recipe_square, viewGroup, false);
 
         RecepieViewHolder recepieViewHolder = new RecepieViewHolder(view);
         context = viewGroup.getContext();
@@ -194,6 +147,8 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
         final RecepieViewHolder vh = (RecepieViewHolder) viewHolder;
         final int i = in;
         vh.textView.setText(recepieList.get(i).getTitle());
+        vh.textView2.setText(recepieList.get(i).getDescription());
+
 
         FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
 
@@ -202,7 +157,7 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
             sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Picasso.with(context).load(uri).resize(150, 95).onlyScaleDown().centerCrop().into(vh.imageView);
+                    Picasso.with(context).load(uri).resize(150, 110).onlyScaleDown().centerCrop().into(vh.imageView);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -215,6 +170,11 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
             Picasso.with(context).load(R.drawable.ic_restaurant_color_24dp).into(vh.imageView);
             vh.imageView.setImageResource(R.drawable.ic_restaurant_color_24dp);
         }
+
+
+
+
+
 
 
         CollectionReference ref = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("favorites");

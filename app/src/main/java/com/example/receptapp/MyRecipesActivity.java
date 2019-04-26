@@ -5,22 +5,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.SearchView;
-import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
@@ -36,11 +28,11 @@ import javax.annotation.Nullable;
 
 import static android.support.constraint.Constraints.TAG;
 
-public class MyRecepesActivity extends AppCompatActivity {
+public class MyRecipesActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private MyRecepesListAdapter adapter;
+    private MyRecipesListAdapter adapter;
     private Toolbar toolbar;
 
 
@@ -58,7 +50,7 @@ public class MyRecepesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_recepes);
+        setContentView(R.layout.activity_my_recipes);
 
         db = FirebaseFirestore.getInstance();
         receptRef = db.collection("recept");
@@ -67,7 +59,7 @@ public class MyRecepesActivity extends AppCompatActivity {
         creator = mAuth.getCurrentUser().getUid();
 
         toolbar = findViewById(R.id.toolbarID);
-        toolbar.setTitle(R.string.myRecepes);
+        toolbar.setTitle(R.string.myRecipes);
         this.setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -76,7 +68,7 @@ public class MyRecepesActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), AddRecepeActivity.class);
+                Intent intent = new Intent(v.getContext(), AddRecipeActivity.class);
                 v.getContext().startActivity(intent);
             }
         });
@@ -91,7 +83,7 @@ public class MyRecepesActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new MyRecepesListAdapter(receptLista);
+        adapter = new MyRecipesListAdapter(receptLista);
         recyclerView.setAdapter(adapter);
 
         checkRecepes();

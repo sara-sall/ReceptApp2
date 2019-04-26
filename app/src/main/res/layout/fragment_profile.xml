@@ -58,7 +58,7 @@
                 android:id="@+id/myRecepesButtonID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/myRecepes" />
+                android:text="@string/myRecipes" />
 
             <Button
                 android:id="@+id/passwordChangeID"

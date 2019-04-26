@@ -2,11 +2,9 @@ package com.example.receptapp;
 
 import android.Manifest;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -49,20 +47,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class AddRecepeActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddRecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
     private ProgressBar progressBar;
 
     private LinearLayout addImageBtn;
-    private ImageView recepeImage;
+    private ImageView recipeImage;
     private ImageView imageDeleteBtn;
 
     private static final int PICK_IMAGE_REQUEST =1;
     private Uri imageUri;
     private String uniqueId;
 
-    private EditText recepeTitle,recepeDesc, recepeIngr, recepeInst;
+    private EditText recipeTitle, recipeDesc, recipeIngr, recipeInst;
 
     private CheckBox cbKött, cbKyckling, cbFisk, cbLax, cbVego, cbPasta, cbPotatis, cbRis, cbBakelse, cbFrukt, cbBeef, cbPork, cbGlutenf, cbLaktosf, cbVegan;
 
@@ -104,13 +102,13 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     private Recept recept;
     private String ingredient, recepeID;
 
-    private static final int MY_PERMISSOPNS_REQUEST_READ_EXTERNAL_STORAGE =123;
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE =123;
 
     private int ingrNr = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_recepe);
+        setContentView(R.layout.activity_add_recipe);
 
         toolbar = findViewById(R.id.toolbarID);
         toolbar.setTitle("Nytt recept");
@@ -133,14 +131,14 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
         addImageBtn = (LinearLayout) findViewById(R.id.addImageLayout);
         addImageBtn.setOnClickListener(this);
-        recepeImage = (ImageView) findViewById(R.id.imageLayout);
+        recipeImage = (ImageView) findViewById(R.id.imageLayout);
         imageDeleteBtn = (ImageView) findViewById(R.id.imageDeleteButton);
         imageDeleteBtn.setOnClickListener(this);
 
-        recepeTitle = (EditText) findViewById(R.id.recepeTitleID);
-        recepeDesc = (EditText) findViewById(R.id.recepeDescID);
-        recepeIngr = (EditText) findViewById(R.id.ingredientID);
-        recepeInst = (EditText) findViewById(R.id.recepeInstrID);
+        recipeTitle = (EditText) findViewById(R.id.recepeTitleID);
+        recipeDesc = (EditText) findViewById(R.id.recepeDescID);
+        recipeIngr = (EditText) findViewById(R.id.ingredientID);
+        recipeInst = (EditText) findViewById(R.id.recepeInstrID);
 
         previewBtn = (Button) findViewById(R.id.recepePreviewID);
         previewBtn.setOnClickListener(this);
@@ -197,20 +195,20 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()){
                         recept = document.toObject(Recept.class);
-                        recepeDesc.setText(recept.getDescription());
-                        recepeTitle.setText(recept.getTitle());
-                        recepeInst.setText(recept.getInstructions());
+                        recipeDesc.setText(recept.getDescription());
+                        recipeTitle.setText(recept.getTitle());
+                        recipeInst.setText(recept.getInstructions());
 
 
                         for(int i = 0; i < recept.getIngredients().size(); i++){
                             ingredient = recept.getIngredients().get(i);
                             if(i == 0){
-                                recepeIngr.setText(ingredient);
+                                recipeIngr.setText(ingredient);
                             }else{
-                                TextInputEditText editText = new TextInputEditText(AddRecepeActivity.this);
+                                TextInputEditText editText = new TextInputEditText(AddRecipeActivity.this);
                                 LinearLayout ingrLayout = (LinearLayout) findViewById(R.id.ingrLayoutID);
 
-                                TextInputLayout textInputLayout = new TextInputLayout(AddRecepeActivity.this);
+                                TextInputLayout textInputLayout = new TextInputLayout(AddRecipeActivity.this);
                                 LinearLayout.LayoutParams textInputLayoutParams = new LinearLayout.LayoutParams(
                                         LinearLayout.LayoutParams.MATCH_PARENT,
                                         LinearLayout.LayoutParams.MATCH_PARENT);
@@ -244,9 +242,9 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     imageUri = uri;
-                                    Picasso.with(AddRecepeActivity.this).load(uri).resize(250, 250).onlyScaleDown().centerInside().into(recepeImage);
-                                    if(recepeImage.getVisibility() == View.GONE){
-                                        recepeImage.setVisibility(View.VISIBLE);
+                                    Picasso.with(AddRecipeActivity.this).load(uri).resize(250, 250).onlyScaleDown().centerInside().into(recipeImage);
+                                    if(recipeImage.getVisibility() == View.GONE){
+                                        recipeImage.setVisibility(View.VISIBLE);
                                         imageDeleteBtn.setVisibility(View.VISIBLE);
 
                                     }
@@ -277,7 +275,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         switch (v.getId()){
             case R.id.addImageLayout:
                 if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSOPNS_REQUEST_READ_EXTERNAL_STORAGE);
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                 }
                 else{
                     openFileChooser();
@@ -287,7 +285,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
             case R.id.imageDeleteButton:
                 imageUri = null;
                 imageDeleteBtn.setVisibility(View.GONE);
-                recepeImage.setVisibility(View.GONE);
+                recipeImage.setVisibility(View.GONE);
                 break;
 
 
@@ -318,7 +316,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
             case R.id.recepePreviewID:
 
                 if (checkInput()){
-                    Intent intent = new Intent(AddRecepeActivity.this, RecepePreviewActivity.class);
+                    Intent intent = new Intent(AddRecipeActivity.this, RecipePreviewActivity.class);
 
                     intent.putExtra("title", title);
                     intent.putExtra("desc", desc);
@@ -424,9 +422,9 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
             imageUri = data.getData();
 
-            Picasso.with(this).load(imageUri).resize(250, 250).onlyScaleDown().centerInside().into(recepeImage);
-            if(recepeImage.getVisibility() == View.GONE){
-                recepeImage.setVisibility(View.VISIBLE);
+            Picasso.with(this).load(imageUri).resize(250, 250).onlyScaleDown().centerInside().into(recipeImage);
+            if(recipeImage.getVisibility() == View.GONE){
+                recipeImage.setVisibility(View.VISIBLE);
                 imageDeleteBtn.setVisibility(View.VISIBLE);
 
             }
@@ -441,10 +439,10 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     }
 
     private boolean checkInput(){
-        title = recepeTitle.getText().toString().trim();
-        desc = recepeDesc.getText().toString().trim();
-        ingr = recepeIngr.getText().toString().trim();
-        inst = recepeInst.getText().toString().trim();
+        title = recipeTitle.getText().toString().trim();
+        desc = recipeDesc.getText().toString().trim();
+        ingr = recipeIngr.getText().toString().trim();
+        inst = recipeInst.getText().toString().trim();
         ingrList.clear();
         ingrList.add(ingr);
 
@@ -458,24 +456,24 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         }
 
         if(title.isEmpty()){
-            recepeTitle.setError("Recepttitel behöver fyllas i");
-            recepeTitle.requestFocus();
+            recipeTitle.setError("Recepttitel behöver fyllas i");
+            recipeTitle.requestFocus();
             return false;
         }
         if(desc.isEmpty()){
-            recepeDesc.setError("Specialkost behöver fyllas i");
-            recepeDesc.requestFocus();
+            recipeDesc.setError("Specialkost behöver fyllas i");
+            recipeDesc.requestFocus();
             return false;
         }
         if(ingr.isEmpty()){
-            recepeIngr = (EditText) findViewById(R.id.ingredientID);
-            recepeIngr.setError("Recepttitel behöver fyllas i");
-            recepeIngr.requestFocus();
+            recipeIngr = (EditText) findViewById(R.id.ingredientID);
+            recipeIngr.setError("Recepttitel behöver fyllas i");
+            recipeIngr.requestFocus();
             return false;
         }
         if(inst.isEmpty()){
-            recepeInst.setError("Instruktioner behöver fyllas i");
-            recepeInst.requestFocus();
+            recipeInst.setError("Instruktioner behöver fyllas i");
+            recipeInst.requestFocus();
             return false;
         }
 
@@ -558,7 +556,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
-            case MY_PERMISSOPNS_REQUEST_READ_EXTERNAL_STORAGE:
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
                     openFileChooser();
                 }else{

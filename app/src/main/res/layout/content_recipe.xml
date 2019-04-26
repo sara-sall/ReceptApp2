@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".RecepieActivity"
+    tools:context=".RecipeActivity"
     tools:showIn="@layout/activity_recepie"
     android:padding="25dp">
 
@@ -27,7 +27,6 @@
             android:id="@+id/recepieADescID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description"
             android:paddingStart="15sp"
             android:textSize="20sp"
             android:paddingBottom="15dp"
@@ -53,7 +52,6 @@
             android:id="@+id/ingredientsID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ingredients"
             android:textColor="@color/black"
             android:paddingStart="15dp"
             android:textSize="20sp"
@@ -80,7 +78,6 @@
             android:id="@+id/instructionsID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Instructions"
             android:textColor="@color/black"
             android:paddingStart="15dp"
             android:textSize="20sp"/>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddRecepeActivity">
+    tools:context=".AddRecipeActivity">
 
     <include
         android:id="@+id/toolbarID"
@@ -99,7 +99,7 @@
                     android:id="@+id/recepeTitleID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/recepeAddTitle"
+                    android:hint="@string/recipeAddTitle"
                     android:maxLines="1"
                     android:shadowColor="@color/colorPrimaryDark"
                     android:singleLine="true"
@@ -116,7 +116,7 @@
                     android:id="@+id/recepeDescID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/recepeAddAllergy"
+                    android:hint="@string/recipeAddAllergy"
                     android:maxLines="1"
                     android:shadowColor="@color/colorPrimaryDark"
 
@@ -409,7 +409,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="10dp"
-                android:text="@string/previewRecepie" />
+                android:text="@string/previewRecipe" />
 
             <Button
                 android:id="@+id/recepeCreateID"
@@ -418,7 +418,7 @@
                 android:layout_marginBottom="30dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:text="@string/createRecepe" />
+                android:text="@string/createRecipe" />
 
 
         </LinearLayout>

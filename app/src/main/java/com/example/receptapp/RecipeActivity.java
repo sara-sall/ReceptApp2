@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class RecepieActivity extends AppCompatActivity {
+public class RecipeActivity extends AppCompatActivity {
 
     private TextView descText, instText, ingrList;
     private boolean isFavorite;

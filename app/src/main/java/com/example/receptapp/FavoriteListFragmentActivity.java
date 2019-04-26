@@ -1,16 +1,12 @@
 package com.example.receptapp;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,23 +14,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -46,10 +36,9 @@ public class FavoriteListFragmentActivity extends Fragment {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private RecepieListAdapter adapterF;
+    private RecipeListAdapter adapterF;
     private Toolbar toolbar;
     private ArrayList<Recept> receptLista;
-    private ArrayList<String> favoritLista;
 
     private FloatingActionButton fab;
 
@@ -77,7 +66,7 @@ public class FavoriteListFragmentActivity extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), AddRecepeActivity.class);
+                Intent intent = new Intent(v.getContext(), AddRecipeActivity.class);
                 intent.putExtra("isfav", true);
                 v.getContext().startActivity(intent);
             }
@@ -92,15 +81,13 @@ public class FavoriteListFragmentActivity extends Fragment {
 
 
         receptLista = new ArrayList<Recept>();
-        favoritLista = new ArrayList<String>();
-
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewID);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapterF = new RecepieListAdapter(receptLista);
+        adapterF = new RecipeListAdapter(receptLista);
         recyclerView.setAdapter(adapterF);
 
         favoriteRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
