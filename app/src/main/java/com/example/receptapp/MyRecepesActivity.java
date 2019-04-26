@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,6 +42,7 @@ public class MyRecepesActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private MyRecepesListAdapter adapter;
     private Toolbar toolbar;
+
 
     private ArrayList<Recept> receptLista;
 
@@ -81,6 +83,7 @@ public class MyRecepesActivity extends AppCompatActivity {
 
 
         receptLista = new ArrayList<Recept>();
+
 
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewID);
@@ -136,8 +139,6 @@ public class MyRecepesActivity extends AppCompatActivity {
 
                             break;
                     }
-
-
 
                 }
             }

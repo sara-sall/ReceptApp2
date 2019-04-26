@@ -52,8 +52,7 @@ public class RecepieListFragmentActivity extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private RecepieListAdapter adapter;
     private Toolbar toolbar;
-    private DividerItemDecoration itemDecoration;
-    private ImageView favoriteButton;
+
     private ArrayList<Recept> receptLista;
 
     private FloatingActionButton fab;

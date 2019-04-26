@@ -2,6 +2,7 @@ package com.example.receptapp;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -85,6 +86,9 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
     private FirebaseFirestore db;
     private CollectionReference receptRef;
     private CollectionReference favoriteRef;
+    private DocumentReference rRef;
+
+    private FirebaseStorage fs;
 
     private StorageReference imageStorageRef;
     private StorageReference fileReference;
@@ -93,8 +97,12 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
     private Button previewBtn;
     private Button addRecepeBtn;
+    private String imageUrl;
 
     private Boolean isFav =false;
+
+    private Recept recept;
+    private String ingredient, recepeID;
 
     private static final int MY_PERMISSOPNS_REQUEST_READ_EXTERNAL_STORAGE =123;
 
@@ -110,13 +118,8 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        Bundle b = getIntent().getExtras();
-
-        if(b != null){
-            if(b.getBoolean("isfav") == true){
-                isFav = true;
-            }
-        }
+        fs = FirebaseStorage.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         progressBar = (ProgressBar) findViewById(R.id.progressbarAR);
 
@@ -169,6 +172,97 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
         ingrButton = (ImageView) findViewById(R.id.addMorIngrButton);
         ingrButton.setOnClickListener(this);
+
+        Bundle b = getIntent().getExtras();
+
+        if(b != null){
+            if(b.getBoolean("isfav") == true){
+                isFav = true;
+            }
+
+            if(b.get("recepeID") != null){
+                recepeID =(String) b.get("recepeID");
+                getRecepeInfo();
+            }
+        }
+
+    }
+
+    public void getRecepeInfo(){
+       rRef = db.collection("recept").document(recepeID);
+        rRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()){
+                        recept = document.toObject(Recept.class);
+                        recepeDesc.setText(recept.getDescription());
+                        recepeTitle.setText(recept.getTitle());
+                        recepeInst.setText(recept.getInstructions());
+
+
+                        for(int i = 0; i < recept.getIngredients().size(); i++){
+                            ingredient = recept.getIngredients().get(i);
+                            if(i == 0){
+                                recepeIngr.setText(ingredient);
+                            }else{
+                                TextInputEditText editText = new TextInputEditText(AddRecepeActivity.this);
+                                LinearLayout ingrLayout = (LinearLayout) findViewById(R.id.ingrLayoutID);
+
+                                TextInputLayout textInputLayout = new TextInputLayout(AddRecepeActivity.this);
+                                LinearLayout.LayoutParams textInputLayoutParams = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                        LinearLayout.LayoutParams.MATCH_PARENT);
+
+                                textInputLayout.setLayoutParams(textInputLayoutParams);
+                                textInputLayout.addView(editText);
+                                editText.setId(100 + ingrNr);
+                                editText.setMaxLines(1);
+                                editText.setHint(R.string.addIngredient);
+                                //textInputLayout.setHint(getResources().getString(R.string.addIngredient));
+                                editText.setSingleLine(true);
+                                editText.setHintTextColor(getResources().getColor(R.color.colorAccent));
+                                editText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                                ingrLayout.addView(textInputLayout);
+
+                                idList.add(editText.getId());
+                                ingrNr += 1;
+
+                                String ID = String.valueOf(idList.get(ingrNr-1));
+                                rIngr = (EditText)findViewById(Integer.parseInt(ID));
+                                rIngr.setText(ingredient);
+
+
+                            }
+                        }
+
+                        imageUrl = recept.getImageLink();
+                        if(!imageUrl.equals("")){
+                            StorageReference sr = fs.getReference().child(imageUrl);
+                            sr.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    imageUri = uri;
+                                    Picasso.with(AddRecepeActivity.this).load(uri).resize(250, 250).onlyScaleDown().centerInside().into(recepeImage);
+                                    if(recepeImage.getVisibility() == View.GONE){
+                                        recepeImage.setVisibility(View.VISIBLE);
+                                        imageDeleteBtn.setVisibility(View.VISIBLE);
+
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    else{
+                        Log.d("!!!", "No document found");
+                    }
+                }
+                else{
+                    Log.d("!!!", "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
     @Override
@@ -416,7 +510,7 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
 
         creator = mAuth.getCurrentUser().getUid();
 
-        db = FirebaseFirestore.getInstance();
+
         receptRef = db.collection("recept");
         String image = "";
         if(imageUri != null){
@@ -427,6 +521,10 @@ public class AddRecepeActivity extends AppCompatActivity implements View.OnClick
         receptRef.add(r).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
+                if(recepeID != null){
+                    receptRef.document(recepeID).delete();
+                }
+
                 if(isFav){
                     favoriteRef = FirebaseFirestore.getInstance().collection("users").document(creator).collection("favorites");
                     Query q = receptRef.whereEqualTo("title", title).whereEqualTo("creator", creator);

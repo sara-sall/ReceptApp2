@@ -55,6 +55,7 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
         private ImageView deleteButton;
         private CardView main;
         private String recepieID;
+        private TextView editRecepe;
 
         private FirebaseAuth mAuth;
         public String user;
@@ -80,7 +81,7 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
             favoriteRef = db.collection("users").document(user).collection("favorites");
             recepeRef = db.collection("recept");
 
-
+            editRecepe = itemView.findViewById(R.id.editRecepe);
             textView = itemView.findViewById(R.id.recepieSquareTitle);
             imageView = itemView.findViewById(R.id.recepieSquareImage);
             favoriteButton = itemView.findViewById(R.id.favoriteButtonID);
@@ -90,6 +91,7 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
             main.setOnClickListener(this);
             favoriteButton.setOnClickListener(this);
             deleteButton.setOnClickListener(this);
+            editRecepe.setOnClickListener(this);
 
 
         }
@@ -105,6 +107,12 @@ public class MyRecepesListAdapter extends RecyclerView.Adapter {
                 intent.putExtra("recepeID", recepieID);
                 v.getContext().startActivity(intent);
 
+            }
+
+            if(v.getId()==R.id.editRecepe){
+                Intent intent = new Intent(v.getContext(), AddRecepeActivity.class);
+                intent.putExtra("recepeID", recepieID);
+                v.getContext().startActivity(intent);
             }
 
             if (v.getId() == R.id.favoriteButtonID) {

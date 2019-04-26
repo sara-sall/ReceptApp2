@@ -24,47 +24,44 @@
         android:layout_marginBottom="8dp">
 
 
-
-    <LinearLayout
-        android:id="@+id/linearLSquareID"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingRight="40dp"
->
-
-        <ImageView
-            android:id="@+id/recepieSquareImage"
-            android:layout_width="85dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/recepieSquareTitle"
-            app:layout_constraintHorizontal_bias="0.3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.31" />
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/linearLSquareID"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginRight="36dp">
+            android:paddingRight="40dp">
 
-            <TextView
-                android:id="@+id/recepieSquareTitle"
+            <ImageView
+                android:id="@+id/recepieSquareImage"
+                android:layout_width="85dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/recepieSquareTitle"
+                app:layout_constraintHorizontal_bias="0.3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.31" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="TextView"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:layout_height="match_parent"
+                android:layout_marginRight="36dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/recepieSquareTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="TextView"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
-
-
-    </LinearLayout>
 
     <ImageView
         android:id="@+id/favoriteButtonID"
@@ -85,6 +82,16 @@
             android:clickable="true"
             android:focusable="true"
             app:srcCompat="@drawable/ic_delete_color_24dp" />
+
+        <TextView
+            android:id="@+id/editRecepe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ändra"
+            android:layout_marginEnd="10dp"
+            android:textSize="20dp"
+            android:layout_below="@id/favoriteButtonID"
+            android:layout_alignEnd="@+id/linearLSquareID"/>
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>
