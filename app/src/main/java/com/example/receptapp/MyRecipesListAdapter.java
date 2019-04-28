@@ -1,9 +1,11 @@
 package com.example.receptapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -139,21 +141,40 @@ public class MyRecipesListAdapter extends RecyclerView.Adapter {
             }
 
             if(v.getId()==R.id.imageDeleteButtonID){
-               haveImage = false;
-                if(recepieItem.getImageLink() != null && !recepieItem.getImageLink().isEmpty()){
-                    imageRef = FirebaseStorage.getInstance().getReference().child(recepieItem.getImageLink());
-                    haveImage = true;
-                }
-                recipeRef.document(recipeID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        if(haveImage){
-                            imageRef.delete();
-                        }
-                        Toast.makeText(imageView.getContext(), "Recept Borttaget", Toast.LENGTH_SHORT  ).show();
 
+                AlertDialog.Builder alert = new AlertDialog.Builder(v.getContext());
+
+                alert.setTitle("Varning!");
+                alert.setMessage("Vill du verkligen ta bort receptet?");
+
+                alert.setPositiveButton("Ta bort", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        haveImage = false;
+                        if(recepieItem.getImageLink() != null && !recepieItem.getImageLink().isEmpty()){
+                            imageRef = FirebaseStorage.getInstance().getReference().child(recepieItem.getImageLink());
+                            haveImage = true;
+                        }
+                        recipeRef.document(recipeID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                if(haveImage){
+                                    imageRef.delete();
+                                }
+                                Toast.makeText(imageView.getContext(), "Recept Borttaget", Toast.LENGTH_SHORT  ).show();
+
+                            }
+                        });
                     }
                 });
+
+                alert.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Canceled.
+                    }
+                });
+
+                alert.show();
+
 
             }
 
