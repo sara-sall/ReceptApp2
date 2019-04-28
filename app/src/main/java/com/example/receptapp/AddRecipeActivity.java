@@ -254,6 +254,64 @@ public class AddRecipeActivity extends AppCompatActivity implements View.OnClick
                                 }
                             });
                         }
+
+                        for(String i : recept.getTags()){
+                            if(i.equals("fika")){
+                                cbBakelse.setChecked(true);
+                            }
+                            if(i.equals("vegetarisk")){
+                                cbVego.setChecked(true);
+                            }
+                            if(i.equals("ris")){
+                                cbRis.setChecked(true);
+                            }
+                            if(i.equals("potatis")){
+                                cbPotatis.setChecked(true);
+                            }
+                            if(i.equals("pasta")){
+                                cbPasta.setChecked(true);
+                            }
+                            if(i.equals("lax")){
+                                cbLax.setChecked(true);
+                            }
+                            if(i.equals("kött")){
+                                cbKött.setChecked(true);
+                            }
+                            if(i.equals("kyckling")){
+                                cbKyckling.setChecked(true);
+                            }
+                            if(i.equals("frukt")){
+                                cbFrukt.setChecked(true);
+                            }
+                            if(i.equals("fisk")) {
+                                cbFisk.setChecked(true);
+                            }
+                            if(i.equals("vegansk")){
+                                cbVegan.setChecked(true);
+                            }
+                            if(i.equals("nöt")){
+                                cbBeef.setChecked(true);
+                            }
+                            if(i.equals("fläsk")){
+                                cbPork.setChecked(true);
+                            }
+                            if(i.equals("glutenfri")){
+                                cbGlutenf.setChecked(true);
+                            }
+                            if(i.equals("laktosfri")){
+                                cbLaktosf.setChecked(true);
+                            }
+                            if(i.equals("frukost")){
+                                cbFrukost.setChecked(true);
+                            }
+                            if(i.equals("lunch")){
+                                cbLunch.setChecked(true);
+                            }
+                            if(i.equals("middag")){
+                               cbMiddag.setChecked(true);
+                            }
+                        }
+
                     }
                     else{
                         Log.d("!!!", "No document found");
